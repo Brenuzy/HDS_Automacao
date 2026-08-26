@@ -72,12 +72,15 @@
 /* 3. Home Section */
 .home {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0px 40px; 
+  flex-direction: column;    
+  justify-content: center;    
+  align-items: center;  
+  text-align: center;
+  padding: 40px 80px; /* Reduzido de 750px para 80px nas laterais */
   min-height: calc(100vh - 100px);
   gap: 40px;
-  background: radial-gradient(circle at 75% 50%, #3b82f6 0%, #06184c 65%);   
+  background: radial-gradient(circle at 75% 50%, #3b82f6 0%, #06184c 65%);
+  box-sizing: border-box;
 }
 
 .home-content {
@@ -123,47 +126,6 @@
   max-width: 520px;
 }
 
-/* Botões */
-.buttons {
-  display: flex;
-  gap: 20px;
-}
-
-.btn-primary {
-  background-color: #00a8ff;
-  color: #ffffff;
-  padding: 12px 24px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-radius: 3px;
-  transition: background-color 0.2s ease;
-}
-
-.btn-primary:hover {
-  background-color: #0086cc;
-}
-
-.btn-outline {
-  border: 1px solid #ffffff;
-  color: #ffffff;
-  padding: 12px 24px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-radius: 3px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.btn-outline:hover {
-  background-color: #ffffff;
-  color: #0b132b;
-}
-
 /* Imagem do Produto */
 .home-image {
   flex: 1;
@@ -175,9 +137,6 @@
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-  /* desfoque no canto superior direito onde fica o cabo */
-  -webkit-mask-image: linear-gradient(to top right, black 65%, transparent 95%);
-  mask-image: linear-gradient(to top right, black 65%, transparent 95%);
 
   animation: slideIn 1s ease-out forwards;
 }
