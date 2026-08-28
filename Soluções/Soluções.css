@@ -23,6 +23,16 @@
   color: #a0aec0;
 }
 
+.active {
+  transform: scale(1.5);
+  color: #00a8ff; /* Altera a cor do texto para o azul em destaque */
+  font-weight: bold; /* Deixa o texto em negrito */
+  text-shadow: 0 0 10px rgba(0, 168, 255, 0.8), 0 0 20px rgba(0, 168, 255, 0.4); /* Adiciona um brilho azul no texto */
+  
+  border-color: #00a8ff;
+  border-radius: 16px;
+}
+
 /* 2. Menu de Navegação */
 .main-nav {
   display: flex;
@@ -49,27 +59,82 @@
   width: 100%;
 }
 
+/* Posição dos itens do menu */
 .main-nav ul {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
+  gap: 50px;
   list-style: none;
-  gap: 25px;
+  margin: 0;
+  padding: 0;
 }
 
 .main-nav a {
+  display:flex;
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto;
+
   color: #ffffff;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
+
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: color 0.2s ease;
+
+  position: relative; /* Necessário para posicionar a linha em relação ao link */
+  display: inline-block; /* Garante que o elemento funcione certo */
+  text-decoration: none; /* Remove qualquer sublinhado padrão */
+  
+  transition: all 0.3s ease; 
 }
 
 .main-nav a:hover {
   color: #00a8ff;
+  transform: scale(1.2);
+
 }
 
-/* 3. Home Section */
+.main-nav a::after {
+  content: ''; /* Cria a linha */
+  position: absolute; /* Posiciona a linha */
+  left: 50%; /* Começa no centro */
+  bottom: -4px; /* Distância do centro */
+  width: 0%; /* Começa com largura zero */
+  height: 2px; /* Espessura da linha */
+  background-color: #ffffff; /* Cor da linha */
+  box-shadow: 0 0 8px #ffffff; /* Brilho */
+  transition: all 0.3s ease; /* Transição para animação */
+  transform: translateX(-50%); /* Centraliza a linha */
+  opacity: 0; /* Começa invisível */
+}
+
+/* Quando o link estiver em hover, a linha aparece */
+.main-nav a:hover::after {
+  width: 100%; /* A linha cresce para cobrir toda a largura */
+  opacity: 1; /* A linha e o brilho ficam visíveis */
+}
+
+/* Efeito no texto quando clicar */
+.main-nav a:active {
+  transform: scale(1);
+  color: #ffffff;
+  transition: transform 0.1s ease; /* Resposta ao clique */
+}
+
+/* Efeito na linha brilhante ao CLICAR */
+.main-nav a:active::after {
+  width: 120%; /* A linha se expande um pouco além do texto */
+  height: 3px; /* Aumenta levemente a espessura */
+  box-shadow: 0 0 16px #ffffff, 0 0 25px #00a8ff; /* Brilho bem mais intenso */
+  transition: all 0.1s ease;
+}
+
+/* Home Section */
   .home {
   display: flex;
   flex-direction: column;    
