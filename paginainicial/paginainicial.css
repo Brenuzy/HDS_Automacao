@@ -171,6 +171,7 @@
   letter-spacing: 2px;
   display: block;
   margin-bottom: 12px;
+  margin-left: -100px;
 
   animation: slideIn2 2s ease-out forwards;
 }
@@ -181,6 +182,7 @@
   line-height: 1.1;
   margin-bottom: 8px;
   color: #ffffff;
+    margin-left: -100px;
 
   animation: slideIn2 1s ease-out forwards;
 }
@@ -191,6 +193,7 @@
   color: #e2e8f0;
   line-height: 1.2;
   margin-bottom: 18px;
+    margin-left: -100px;
 
   animation: slideIn3 1s ease-out forwards;
 }
@@ -201,12 +204,14 @@
   line-height: 1.6;
   margin-bottom: 28px;
   max-width: 520px;
+  margin-left: -100px;
 }
 
 /* Botões Saiba Mais & Ver Especificações */
 .buttons {
   display: flex;
   gap: 20px;
+  margin-left: -100px;
 }
 
 .btn-primary {
@@ -255,7 +260,13 @@
   max-width: 100%;
   height: auto;
   border-radius: 16px;
-  scale: 2;
+  margin-left: -200px;
+  scale: 1.2;
+  animation: slideIn 1s ease-out forwards;
+
+  filter: drop-shadow(0 0 15px rgba(0, 162, 255, 0.8)) 
+          drop-shadow(0 0 30px rgba(0, 162, 255, 0.4));
+
   animation: slideIn 1s ease-out forwards;
 }
 
