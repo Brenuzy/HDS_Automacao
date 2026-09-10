@@ -103,23 +103,28 @@
 }
 
 .main-nav a:hover {
-  color: #00a8ff;
-  transform: scale(1.2);
-
+  transform: scale(1.4);
+  color: #ffffff;
+  font-weight: bold; /* Deixa o texto em negrito */
+  text-shadow: 0 0 10px rgba(0, 168, 255, 0.8), 0 0 20px rgba(0, 168, 255, 0.4); /* Adiciona um brilho azul no texto */
+  
+  border-color: #00a8ff;
+  border-radius: 16px;
 }
 
 .main-nav a::after {
-  content: ''; /* Cria a linha */
-  position: absolute; /* Posiciona a linha */
-  left: 50%; /* Começa no centro */
-  bottom: -4px; /* Distância do centro */
-  width: 0%; /* Começa com largura zero */
-  height: 2px; /* Espessura da linha */
-  background-color: #ffffff; /* Cor da linha */
-  box-shadow: 0 0 8px #ffffff; /* Brilho */
-  transition: all 0.3s ease; /* Transição para animação */
-  transform: translateX(-50%); /* Centraliza a linha */
-  opacity: 0; /* Começa invisível */
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  /* Gradiente direto no fundo em vez de cor sólida */
+  background: linear-gradient(to right, transparent, #ffffff 15%, #ffffff 85%, transparent);
+  box-shadow: 0 0 8px #ffffff;
+  transition: all 0.5s ease;
+  transform: translateX(-50%);
+  opacity: 0;
 }
 
 /* Quando o link estiver em hover, a linha aparece */
