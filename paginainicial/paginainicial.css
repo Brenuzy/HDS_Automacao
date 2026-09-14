@@ -1,6 +1,8 @@
 .body {
   background-color: #0b132b;
   color: #ffffff;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
 /* Top Bar */
@@ -167,6 +169,8 @@
 /* Container fixado no centro inferior */
 .carousel-indicators {
   position: absolute;
+  top: 100%; /* Posiciona o topo do botão no meio da altura */
+  transform: translateY(100%); /* Centraliza perfeitamente no eixo vertical */
   bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
@@ -213,7 +217,7 @@
   min-height: 80vh;
   padding: 0 5% 0 8%; /* Dá espaço na esquerda para os indicadores */
   box-sizing: border-box;
-  background: radial-gradient(circle at 75% 50%, #1e5bb8 0%, #06184c 70%);
+  background: linear-gradient(90deg, #06184c 30.67%, #0c2661 50.96%, #143885 68.88%, #0d2b7c);
 }
 
 .home-content1 h1, .home-content2 h1, .home-content3 h1 {
@@ -266,9 +270,8 @@
   max-width: 550px; /* Tamanho proporcional à referência */
   height: auto;
   object-fit: contain;
-  margin: 0; /* Remove qualquer margin-left negativo antigo */
-  transform: none; /* Remove scales que possam distorcer */
-  filter: drop-shadow(0 0 20px rgba(0, 162, 255, 0.3));
+  transform: none; 
+  filter: drop-shadow(0 0 40px rgba(0, 162, 255, 0.3));
 }
 
 /* Botões Saiba Mais & Ver Especificações */
@@ -442,6 +445,7 @@
   height: 3px;
   background: #ffffff;
   margin: 0 auto; /* Centraliza a linha na tela */
+  margin-bottom: 40px;
   
   box-shadow:
     0 0 6px #ffffff,

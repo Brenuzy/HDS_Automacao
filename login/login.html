@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conta - HDS Automações</title>
+  <link rel="stylesheet" href="login.css">
+  <script src="login.js"></script>
+</head>
+<body>
+
+  <!-- Adicione esta div abraçando o header e o container -->
+  <main class="page-wrapper">
+
+    <!-- Seu HEADER exatamente como está no seu print -->
+    <header class="header-container">
+      <nav class="main-nav">
+        <div class="logo">
+          <a href="../paginainicial/paginainicial.html"><img src="../bancodeimagens/logohds.png" alt="Logo"></a>
+        </div>
+        <ul>
+          <li><a href="https://www.us.contrinex.com/collections/all/">Produtos</a></li>
+          <li><a href="../solucoes/solucoes.html">Soluções</a></li>
+          <li><a href="https://www.us.contrinex.com/pages/downloads/">Manuais</a></li>
+          <li><a href="../sobre/sobre.html">Sobre nós</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ESTRUTURA HTML DO SEU FORMULÁRIO -->
+  <div class="container">
+    
+    <!-- FORMULÁRIO DE LOGIN -->
+    <form id="loginForm" onsubmit="fazerLogin(event)">
+      <h2>Login</h2>
+      
+      <div class="field">
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" required>
+      </div>
+      
+      <div class="field">
+        <label for="loginSenha">Senha</label>
+        <input type="password" id="loginSenha" required>
+      </div>
+      
+      <button type="submit">ENTRAR</button>
+      
+      <p class="switch">
+        Não tem conta? <a href="#" onclick="toggleForm()">Cadastre-se</a>
+      </p>
+    </form>
+
+    <!-- FORMULÁRIO DE CADASTRO -->
+    <form id="registerForm" class="hidden">
+      <h2>Cadastro</h2>
+      
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" required>
+      </div>
+      
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" required>
+      </div>
+      
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" required>
+      </div>
+      
+      <button type="submit">CADASTRAR</button>
+      
+      <p class="switch">
+        Já tem conta? <a href="#" onclick="toggleForm()">Fazer Login</a>
+      </p>
+    </form>
+
+  </div>
+
+  <!-- SCRIPT PARA INTERAÇÃO DOS FORMULÁRIOS -->
+  <script>
+    function toggleForm() {
+      document.getElementById('loginForm').classList.toggle('hidden');
+      document.getElementById('registerForm').classList.toggle('hidden');
+    }
+
+    function fazerLogin(event) {
+      event.preventDefault();
+      // Insira aqui a função de autenticação de login
+    }
+  </script>
+
+</body>
+</html>

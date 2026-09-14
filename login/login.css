@@ -1,0 +1,275 @@
+* {
+  box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.main-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 20px 40px;
+  box-sizing: border-box;
+}
+
+.logo img {
+  max-height: 65px;
+  width: auto;
+  display: block;
+  transform: scale(5); /* Ajuste este valor (ex: 1.5, 2.0) até chegar ao tamanho ideal */
+  transform-origin: left center; /* Mantém o alinhamento preso no canto esquerdo */
+  margin-left: -700px; /* Ajuste a margem esquerda conforme necessário */
+  
+}
+
+.main-nav ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav ul li a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  color: #ffffff;
+  margin-left: -500px;
+  margin-bottom: 25px;
+  bottom: -150px;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  
+}
+
+.active {
+  transform: scale(1.5);
+  color: #00a8ff; /* Altera a cor do texto para o azul em destaque */
+  font-weight: bold; /* Deixa o texto em negrito */
+  text-shadow: 0 0 10px rgba(0, 168, 255, 0.8), 0 0 20px rgba(0, 168, 255, 0.4); /* Adiciona um brilho azul no texto */
+  
+  border-color: #00a8ff;
+  border-radius: 16px;
+}
+
+/* Posição dos itens do menu */
+.main-nav ul {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav a {
+  display:flex;
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto;
+
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
+
+  position: relative; /* Necessário para posicionar a linha em relação ao link */
+  display: inline-block; /* Garante que o elemento funcione certo */
+  text-decoration: none; /* Remove qualquer sublinhado padrão */
+  
+  transition: all 0.3s ease; 
+}
+
+.main-nav a:hover {
+  transform: scale(1.4);
+  color: #ffffff;
+  font-weight: bold; /* Deixa o texto em negrito */
+  text-shadow: 0 0 10px rgba(0, 168, 255, 0.8), 0 0 20px rgba(0, 168, 255, 0.4); /* Adiciona um brilho azul no texto */
+  
+  border-color: #00a8ff;
+  border-radius: 16px;
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  /* Gradiente direto no fundo em vez de cor sólida */
+  background: linear-gradient(to right, transparent, #ffffff 15%, #ffffff 85%, transparent);
+  box-shadow: 0 0 8px #ffffff;
+  transition: all 0.5s ease;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+/* Quando o link estiver em hover, a linha aparece */
+.main-nav a:hover::after {
+  width: 100%; /* A linha cresce para cobrir toda a largura */
+  opacity: 1; /* A linha e o brilho ficam visíveis */
+}
+
+/* Efeito no texto quando clicar */
+.main-nav a:active {
+  transform: scale(1);
+  color: #ffffff;
+  transition: transform 0.1s ease; /* Resposta ao clique */
+}
+
+/* Efeito na linha brilhante ao CLICAR */
+.main-nav a:active::after {
+  width: 120%; /* A linha se expande um pouco além do texto */
+  height: 3px; /* Aumenta levemente a espessura */
+  box-shadow: 0 0 16px #ffffff, 0 0 25px #00a8ff; /* Brilho bem mais intenso */
+  transition: all 0.1s ease;
+  transform: opacity (1);
+}
+
+:root {
+  --bg-gradient-start: #002b80;
+  --bg-gradient-end: #001242;
+  --card-bg: #ffffff;
+  --card-border: rgba(255, 255, 255, 0.2);
+  --text-main: #ffffff;
+  --text-muted: #d0d7de;
+  --text-card: #0f172a;
+  --input-bg: #f8fafc;
+  --input-border: #cbd5e1;
+  --input-focus: #00aaff;
+  --primary-blue: #00aaff;       
+  --primary-hover: #0088cc;
+  --accent-color: #00aaff;
+  --shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.container {
+  background: var(--card-bg);
+  padding: 150px 30px;
+  border-radius: 12px;
+  width: 660px;
+  box-shadow: var(--shadow);
+  margin-right: -400px;
+  bottom: 0;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: var(--text-card);
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+/* Caixa de Texto */
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-card);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  outline: none;
+  font-size: 0.95rem;
+  color: var(--text-card);
+}
+
+input:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.2);
+}
+
+/* Botão Entrar / Cadastrar */
+button {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-blue);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 170, 255, 0.3);
+  margin-top: 5px;
+}
+
+button:hover {
+  background: var(--primary-hover);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Botão para trocar entre formulários */
+.switch {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.switch a {
+  color: var(--bg-gradient-start);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.switch a:hover {
+  text-decoration: underline;
+}
+
+/* Ocultar formulário */
+.hidden {
+  display: none;
+}
