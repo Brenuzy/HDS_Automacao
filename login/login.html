@@ -7,25 +7,7 @@
   <link rel="stylesheet" href="login.css">
   <script src="login.js"></script>
 </head>
-<body>
-
-  <!-- Adicione esta div abraçando o header e o container -->
-  <main class="page-wrapper">
-
-    <!-- Seu HEADER exatamente como está no seu print -->
-    <header class="header-container">
-      <nav class="main-nav">
-        <div class="logo">
-          <a href="../paginainicial/paginainicial.html"><img src="../bancodeimagens/logohds.png" alt="Logo"></a>
-        </div>
-        <ul>
-          <li><a href="https://www.us.contrinex.com/collections/all/">Produtos</a></li>
-          <li><a href="../solucoes/solucoes.html">Soluções</a></li>
-          <li><a href="https://www.us.contrinex.com/pages/downloads/">Manuais</a></li>
-          <li><a href="../sobre/sobre.html">Sobre nós</a></li>
-        </ul>
-      </nav>
-    </header>
+<body>  
 
     <!-- ESTRUTURA HTML DO SEU FORMULÁRIO -->
   <div class="container">
@@ -87,9 +69,25 @@
     }
 
     function fazerLogin(event) {
-      event.preventDefault();
-      // Insira aqui a função de autenticação de login
+  event.preventDefault();
+
+  const email = document.getElementById('loginEmail').value;
+  const senha = document.getElementById('loginSenha').value;
+
+  fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, senha })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.sucesso) {
+      window.location.href = "../paginainicial/paginainicial.html";
+    } else {
+      alert("E-mail ou senha incorretos!");
     }
+  });
+}
   </script>
 
 </body>

@@ -31,8 +31,12 @@
   align-items: center;
   justify-content: flex-start;
   gap: 40px;
-  padding: 20px 40px;
+  padding: 35px 40px;
   box-sizing: border-box;
+}
+
+.logo {
+  margin-left: 40px;
 }
 
 .logo img {
