@@ -291,6 +291,13 @@
     }
 }
 
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
 .page-end-section {
   background-color: #0b2e88;
   color: #ffffff;
@@ -299,29 +306,50 @@
   position: relative;
 }
 
-/* Estrutura principal em colunas lado a lado */
 .footer-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  max-width: 1200px;
+  align-items: flex-start;  
+  gap: 30px;
   margin: 0 auto;
-  gap:  px;
-  scale: 1,2;
+  margin-left: 70px;
 }
 
 .footer-col {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex: 1;
   margin-bottom: 20px;
-  gap: 10px;
+  gap: 5px;
+}
+
+.footer-col a:hover {
+}
+
+.footer-col a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ffffff;
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-in-out;
+}
+
+.footer-col a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left; 
 }
 
 .footer-logo {
   width: 100%;
-  max-width: 220px; /* Limita a largura do logo para não estourar */
-  height: auto;     /* Mantém a proporção correta */
+  max-width: 300px;
+  height: auto;
   display: flex;
 }
 
@@ -333,46 +361,40 @@
   text-transform: uppercase;
 }
 
-.footer-col p, 
 .footer-col a {
-  color: #d1d5db;
+  color: #ffffff;
   text-decoration: none;
   font-size: 14px;
   margin-bottom: 10px;
   line-height: 1.4;
-}
-
-.footer-col a:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
-
-/* Responsividade para telas menores */
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-    gap: 40px;
-  }
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  padding-bottom: 2px;
 }
 
 .contact-item {
   display: flex;
-  align-items: center; 
-  gap: 12px;           
-  margin-bottom: 15px; 
-  scale: (.2);
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  white-space: nowrap;
 }
 
 .contact-item img,
-.contact-item svg {
-  width: 24px;   
+.icon {
+  width: 20px;
   height: auto;
-  display: block;
+  flex-shrink: 0;
 }
 
 .contact-item span,
 .contact-item a {
-  line-height: 1; 
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1;
+  text-align: left;
 }
 
 .company-rights {
@@ -385,7 +407,7 @@
   font-size: 13px;        
   color: #ffffff;     
   opacity: 0.8;            
-  margin: 0;
+  margin: auto;
   font-family: Arial, sans-serif;
 }
 .social-icons {
