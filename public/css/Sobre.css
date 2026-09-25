@@ -229,13 +229,13 @@
 }
 
 .home-image img {
-  width: 90vw; /* Ocupa 90% da largura da tela */
+  width: 90vw;
   max-width: 1300px;
-  height: auto !important;
-  min-height: 450px !important;
-  object-fit: cover !important;
-  display: block !important;
-  margin: 0 auto !important;
+  height: auto;
+  min-height: 450px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
 
   animation: slideIn2 3s;
 }
@@ -272,7 +272,7 @@
   font-weight: 400;
   line-height: 1.6;
   margin-bottom: 16px;
-  color: #e0e6ed;
+  color: #ffffff;
 }
 
 @keyframes slideIn{
