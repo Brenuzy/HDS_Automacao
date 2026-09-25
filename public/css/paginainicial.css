@@ -137,20 +137,17 @@
   opacity: 0;
 }
 
-/* Quando o link estiver em hover, a linha aparece */
 .main-nav a:hover::after {
   width: 100%;
   opacity: 1;
 }
 
-/* Efeito no texto quando clicar */
 .main-nav a:active {
   transform: scale(1);
   color: #ffffff;
   transition: transform 0.1s ease;
 }
 
-/* Efeito na linha brilhante ao CLICAR */
 .main-nav a:active::after {
   width: 120%;
   height: 3px;
@@ -158,8 +155,6 @@
   transition: all 0.1s ease;
   transform: opacity (1);
 }
-
-/* Slides Section */
 
 .home-content1, 
 .home-content2, 
@@ -169,7 +164,6 @@
   z-index: 2;
 }
 
-/* Container fixado no centro inferior */
 .carousel-indicators {
   position: absolute;
   top: 95%;
@@ -183,7 +177,6 @@
   z-index: 20;
 }
 
-/* Indicadores inativos (Quadrados limpos) */
 .dot {
   width: 10px;
   height: 10px;
@@ -195,21 +188,17 @@
   transition: all 0.3s ease;
 }
 
-/* Indicador ativo com efeito Neon / Brilho */
 .dot.active {
   width: 28px;
   height: 10px;
   background-color: #ffffff;
   border-radius: 3px;
   
-  /* Efeito de brilho em camadas (glow) */
   box-shadow: 
     0 0 4px #ffffff,
     0 0 10px rgba(0, 168, 255, 0.8),
     0 0 20px rgba(0, 168, 255, 0.6);
 }
-
-/* Home Section */
 
 .home {
   position: relative;
@@ -281,10 +270,11 @@
   height: auto;
   object-fit: contain;
   transform: none; 
-  filter: drop-shadow(0 0 40px rgba(0, 162, 255, 0.3));
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+  
+
 }
 
-/* Botões Saiba Mais & Ver Especificações */
 .buttons {
   display: flex;
   gap: 20px;
@@ -326,7 +316,6 @@
   color: #0b132b;
 }
 
-/* Animações */
 @keyframes slideIn{
     from {
         opacity: 0;
@@ -371,7 +360,6 @@
     }
 }
 
-/* Animação do Flash */
 @keyframes flashGlow {
   0% {
     box-shadow: 0 0 8px #ffffff;
@@ -385,7 +373,6 @@
   }
 }
 
-/* Aplica a animação no clique */
 .main-nav a:active::after {
   animation: flashGlow 0.2s ease-in-out;
 }
@@ -497,7 +484,7 @@ body {
 }
 
 .product-card {
- background: radial-gradient( #607fdc 30.67%, #2954c9 100%);
+ background: radial-gradient(circle at top right, #3B82F6 30.67%, #1E3A8A 100%);
   border-radius: 4px;
   position: relative;
   height: 220px;
@@ -536,8 +523,8 @@ body {
   z-index: 1;
 }
 
-.product-card img:hover {
-  transform: translateY(-4px) scale(1.05);
+.product-card:hover {
+  background: radial-gradient(circle at top right, #2144ad 30.67%, #000000 100%);
 }
 
 @media (max-width: 900px) {
@@ -576,7 +563,7 @@ body {
 }
 
 .product-card-event {
-  background-color: #2b5cb8;
+  background: radial-gradient(circle at top right, #607fdc 30.67%, #2954c9 100%);
   border-radius: 4px;
   position: relative;
   height: 220px;
