@@ -156,7 +156,6 @@
   flex: 1;
   max-width: 500px;
   z-index: 2;
-  width: 5000px;
 }
 
 .carousel-indicators {
@@ -266,8 +265,11 @@
   object-fit: contain;
   transform: none; 
   filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
-  
+}
 
+.slides-container {
+  display: flex;
+  align-items: center;
 }
 
 .buttons {
