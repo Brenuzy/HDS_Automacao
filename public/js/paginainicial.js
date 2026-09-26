@@ -14,19 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   function mostrarSlide(index) {
-    // 1. Atualiza os botões
+
     dots.forEach((dot, i) => {
       dot.classList.toggle('active', i === index);
     });
 
-    // 2. Controla a exibição dos textos
     contents.forEach((content, i) => {
       if (content) {
         content.style.display = (i === index) ? 'block' : 'none';
       }
     });
 
-    // 3. Controla a exibição das imagens
     images.forEach((image, i) => {
       if (image) {
         image.style.display = (i === index) ? 'flex' : 'none';
@@ -38,6 +36,5 @@ document.addEventListener('DOMContentLoaded', () => {
     dot.addEventListener('click', () => mostrarSlide(index));
   });
 
-  // Força a exibição inicial apenas do slide 1 (índice 0)
   mostrarSlide(0);
 });
