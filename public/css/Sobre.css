@@ -221,11 +221,12 @@
 
 /* Imagem Dax */
 .home-image {
-  width: 100%;
+  width: 150%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px 0;
+  margin-left: -130px;
 }
 
 .home-image img {
