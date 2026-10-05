@@ -378,7 +378,7 @@
 .action-bar-container {
   display: flex;
   justify-content: center;
-  gap: 60px;
+  gap: 120px;
   width: 100%;
   max-width: 1200px;
   margin-bottom: 40px;
@@ -396,6 +396,7 @@
   font-weight: bold;
   letter-spacing: 0.5px;
   transition: opacity 0.2s ease, transform 0.2s ease;
+  scale: 1.5;
 }
 
 .action-item:hover {  
@@ -407,43 +408,42 @@
 .icon {
   width: 32px;
   height: 32px;
-  margin-left: 0px;
+  
 }
 
 .glow-line {
-  width: 80%;
-  max-width: 1000px;
-  height: 3px;
-  background: #ffffff;
-  box-shadow: 
-    0 0 6px #ffffff,
-    0 0 10px #60a5fa,
-    0 0 20px #2563eb,
-    0 0 34px #1d4ed8;
-
-  border-radius: 50%;
-  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-    margin-bottom: 40px;
-}
-
-.glow-line-end {
+  position: relative;
   width: 80%;
   max-width: 1200px;
   height: 3px;
-  background: #ffffff;
-  margin: 0 auto;
-  margin-bottom: 40px;
+  margin: 60px auto;
   
-  box-shadow:
-    0 0 6px #ffffff,
-    0 0 10px #60a5fa,
-    0 0 20px #2563eb,
-    0 0 34px #1d4ed8;
+  background: linear-gradient(
+    to right, 
+    transparent 10%, 
+    #ffffff 15%, 
+    #ffffff 85%, 
+    transparent 90%
+  );
+}
 
-  border-radius: 50%; 
-  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+.glow-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 100%;
+  background: inherit;
+  
+  box-shadow: 
+    0 0 6px #ffffff,
+    0 0 12px #60a5fa,
+    0 0 22px #2563eb,
+    0 0 36px #1d4ed8;
+  
+  filter: blur(10px);
+  pointer-events: none;
 }
 
 body {
@@ -544,61 +544,62 @@ body {
   margin-bottom: 40px;
 }
 
-.products-grid-event {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.product-card-event {
-  background: radial-gradient(circle at top right, #607fdc 30.67%, #2954c9 100%);
-  border-radius: 4px;
-  position: relative;
-  height: 220px;
-  display: flex;
-  overflow: hidden;
-  text-decoration: none;
-  color: #ffffff;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card-content-event {
-  width: 50%;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  z-index: 2;
-}
-
-.card-content-event h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-.product-card-event img {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: right center;
-  z-index: 1;
-  margin-top: 15px;
-}
-
 .event-section {
   gap: 12px;
 }
 
-.product-card-event img:hover {
-  transform: translateY(-4px) scale(1.05);
+.event-card-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.event-card {
+  width: 320px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: Arial, sans-serif;
+}
+
+/* Área da imagem */
+.event-card-image {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(135deg, #0b318f, #031548);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Conteúdo de texto */
+.event-card-content {
+  padding: 20px;
+}
+
+.event-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0b1c3f;
+  line-height: 1.3;
+  margin: 0 0 16px 0;
+}
+
+.event-card-date {
+  font-size: 13px;
+  color: #2c4d87;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
 @media (max-width: 900px) {
@@ -621,10 +622,9 @@ body {
 }
 
 .page-end-section {
-  background-color: #0b2e88;
   color: #ffffff;
   font-family: Arial, sans-serif;
-  padding: 60px 20px 40px 20px;
+  padding: 0px 20px 40px 20px;
   position: relative;
 }
 
@@ -632,7 +632,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;  
-  gap: 30px;
+  gap: 120px;
   margin: 0 auto;
   margin-left: 70px;
 }
