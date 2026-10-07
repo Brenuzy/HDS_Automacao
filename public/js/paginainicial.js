@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   const images = [
-    document.querySelector('.home-image1'),
-    document.querySelector('.home-image2'),
-    document.querySelector('.home-image3')
+    document.querySelector('.home1'),
+    document.querySelector('.home2'),
+    document.querySelector('.home3')
   ];
 
   function mostrarSlide(index) {

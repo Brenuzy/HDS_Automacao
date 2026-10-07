@@ -194,7 +194,39 @@
     0 0 20px rgba(0, 168, 255, 0.6);
 }
 
+/* slide 1 */
 .home {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 80vh;/* erro aqui, impede a imagem de tomar overlay */
+  padding: 0 5% 0 8%;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #0e2e6a 0%, #1c53a2 20%, #2b6fd6 40%, #2b6fd6 60%, #0d3590 100%);
+  width: 100%;
+}
+
+/* Imagem apenas no slide 1 */
+.home::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 67%;
+  height: 100%;
+  background-image: url('/images/background cilindro.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%);
+  mask-image: linear-gradient(to right, transparent 0%, black 25%);
+  pointer-events: none;
+}
+
+/* slide 2 */
+.home2 {
   position: relative;
   display: flex;
   align-items: center;
@@ -203,7 +235,61 @@
   min-height: 80vh;
   padding: 0 5% 0 8%;
   box-sizing: border-box;
-  background: linear-gradient(90deg, #06184c 30.67%, #0c2661 50.96%, #143885 68.88%, #0d2b7c);
+
+  background: linear-gradient(180deg, #0e2e6a 0%, #1c53a2 20%, #2b6fd6 40%, #2b6fd6 60%, #0d3590 100%);
+}
+
+.home2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 67%;
+  height: 100%;
+  background-image: url('/images/background fuso.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: cover;
+
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%);
+  mask-image: linear-gradient(to right, transparent 0%, black 25%);
+  pointer-events: none;
+}
+
+/* slide 3 */
+.home3 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 80vh;
+  padding: 0 5% 0 8%;
+  box-sizing: border-box;
+
+  background: linear-gradient(180deg, #0e2e6a 0%, #1c53a2 20%, #2b6fd6 40%, #2b6fd6 60%, #0d3590 100%);
+}
+
+.home3::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 67%;
+  height: 100%;
+  background-image: url('/images/background weld.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: cover;
+
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%);
+  mask-image: linear-gradient(to right, transparent 0%, black 25%);
+  pointer-events: none;
+}
+
+.home-content1, .home-content2, .home-content3 {
+  display: flex;
+  margin-right: 20px;
 }
 
 .home-content1 h1, .home-content2 h1, .home-content3 h1 {
@@ -259,9 +345,7 @@
 }
 
 .slides-container {
-  display: flex;
-  justify-content: center;
-  margin-left: 300px;
+  
 }
 
 .buttons {
@@ -380,8 +464,9 @@
   justify-content: center;
   gap: 120px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 900px;
   margin-bottom: 40px;
+  margin-left: -100px;
   flex-wrap: wrap;
 }
 
@@ -452,8 +537,6 @@ body {
 }
 
 .products-section {
-  padding: 20px 20px;
-  color: #ffffff;
 }
 
 .section-title {
@@ -462,7 +545,7 @@ body {
   font-size: 28px;
   font-weight: 800;
   letter-spacing: 1px;
-  margin-bottom: 40px;
+  margin-bottom: 60px;
 }
 
 .products-grid {
