@@ -26,6 +26,11 @@ app.get('/contatos', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'contatos.html'));
 });
 
+// rota para a pag Produtos
+app.get('/produtos', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages', 'produtos.html'));
+});
+
 // rota não encontrada
 app.use((req, res) => {
     res.status(404).send('<h1>Página não encontrada!</h1>');
