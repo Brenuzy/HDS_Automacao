@@ -224,7 +224,7 @@
   right: 0;
   width: 67%;
   height: 100%;
-  background-image: url('public/images/background cilindro.png');
+  background-image: url('public/images/backgroundcilindro.png');
   background-repeat: no-repeat;
   background-position: right center;
   background-size: contain;
@@ -251,7 +251,7 @@
   right: 0;
   width: 67%;
   height: 100%;
-  background-image: url('public/images/background fuso.png'); 
+  background-image: url('public/images/backgroundfuso.png'); 
   background-repeat: no-repeat;
   background-position: right center;
   background-size: cover;
@@ -278,7 +278,7 @@
   right: 0;
   width: 67%;
   height: 100%;
-  background-image: url('public/images/background weld.png');
+  background-image: url('public/images/backgroundweld.png');
   background-repeat: no-repeat;
   background-position: right center;
   background-size: cover;
