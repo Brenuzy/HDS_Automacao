@@ -308,26 +308,27 @@ body {
 }
 
 .event-card-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.product-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  width: 50%;
-  padding: 20px;
-  box-sizing: border-box;
-  margin-left: 400px;
+  margin-bottom: 30px;
 }
 
 .event-card {
-  width: 200px;
-  flex-shrink: 0;
+  width: 100%;
+  margin: 0;
   background-color: #ffffff;
-  border-radius: 4px;
+
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-family: Arial, sans-serif;
-  scale: 1;
-  margin-left: auto;
-  margin-right: 0;
 }
 
 .event-card-image {
@@ -363,6 +364,19 @@ body {
   font-weight: 600;
   letter-spacing: 0.5px;
   margin: 0;
+}
+
+.event-card-type {
+  display: inline-block;
+  background-color: #00a8ff;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
 
 .products-section-event {
@@ -519,131 +533,255 @@ body {
   text-align: center;
 }
 
-.price-filter-container {
-
-  padding: 24px;
-  width: 320px;
-  color: #ffffff;
-  font-family: Arial, sans-serif;
+/* barra de pesquisa */
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto 30px auto;
+  width: 100%;
+  max-width: 450px;
+  padding: 0 20px;
   box-sizing: border-box;
 }
 
-/* Cabeçalho */
+.search-box {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  color: #a0aec0;
+  pointer-events: none;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 10px 16px 10px 42px; /* Espaço para a lupa no canto esquerdo */
+  font-size: 14px;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08); /* Fundo translúcido */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px; /* Bordas arredondadas / estilo pílula */
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+#searchInput::placeholder {
+  color: #a0aec0;
+}
+
+#searchInput:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #00a8ff;
+  box-shadow: 0 0 10px rgba(0, 168, 255, 0.4);
+}
+
+
+/* ===================================================
+   2. FILTRO DE PREÇO (Estilo Lateral Contrinex)
+   =================================================== */
+.price-filter-container {
+  background-color: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 18px 0;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto 40px auto;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
 .price-filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .price-title {
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  color: #ffffff;
+}
+
+.price-title .arrow {
+  font-size: 10px;
+  color: #ffffff;
 }
 
 .clear-btn {
   background: none;
   border: none;
-  color: #ffffff;
-  font-size: 16px;
+  color: #a0aec0;
+  font-size: 13px;
   cursor: pointer;
   padding: 0;
+  transition: color 0.2s ease;
 }
 
-/* Inputs de Texto/Número */
+.clear-btn:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Campos de entrada dos valores numéricos */
 .price-inputs {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 30px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .input-box {
   display: flex;
   align-items: center;
-  border: 1px solid #ffffff;
-  padding: 8px 12px;
-  width: 110px;
-  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 6px 10px;
+  flex: 1;
 }
 
 .input-box .currency {
-  font-size: 18px;
-  margin-right: 12px;
+  color: #a0aec0;
+  font-size: 13px;
+  margin-right: 4px;
 }
 
-.input-box input {
+.input-box input[type="number"] {
+  width: 100%;
   background: transparent;
   border: none;
-  color: #ffffff;
-  font-size: 20px;
-  font-weight: bold;
-  width: 100%;
   outline: none;
-  text-align: center;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  -moz-appearance: textfield;
 }
 
-/* Esconde as setas padrão do input number */
-.input-box input::-webkit-outer-spin-button,
-.input-box input::-webkit-inner-spin-button {
+.input-box input[type="number"]::-webkit-outer-spin-button,
+.input-box input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 .separator {
-  font-size: 20px;
-  font-weight: bold;
+  color: #a0aec0;
+  font-size: 12px;
 }
 
-/* Slider Duplo */
+/* Controles de Slider (Range) */
 .slider-container {
   position: relative;
-  width: 100%;
-  height: 6px;
-  margin-bottom: 12px;
+  height: 4px;
+  margin: 20px 0 12px 0;
 }
 
 .slider-track {
   position: absolute;
-  width: 100%;
-  height: 2px;
-  background-color: #ffffff;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
 }
 
 .slider-container input[type="range"] {
   position: absolute;
   width: 100%;
-  height: 6px;
-  top: 50%;
-  transform: translateY(-50%);
+  height: 4px;
+  top: 0;
+  left: 0;
   background: none;
   pointer-events: none;
   -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
-/* Estilo do botão redondo (Thumb) */
 .slider-container input[type="range"]::-webkit-slider-thumb {
-  height: 24px;
-  width: 24px;
+  height: 14px;
+  width: 14px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1px solid #333333;
+  border: 2px solid #00a8ff;
+  cursor: pointer;
   pointer-events: auto;
   -webkit-appearance: none;
-  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 168, 255, 0.8);
 }
 
-/* Escala numérica abaixo */
+.slider-container input[type="range"]::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #00a8ff;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 0 6px rgba(0, 168, 255, 0.8);
+}
+
+/* Marcações de Preço abaixo do Slider */
 .price-ticks {
   display: flex;
   justify-content: space-between;
-  font-size: 15px;
-  color: #ffffff;
+  font-size: 11px;
+  color: #a0aec0;
+  margin-top: 8px;
+}
+
+/* Layout Principal (Flexbox para alinhar Sidebar e Produtos lado a lado) */
+.main-content-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Sidebar Presa no Canto Esquerdo */
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 100px; /* Distância do topo durante a rolagem */
+}
+
+/* Reajuste das Caixas dentro da Sidebar */
+.sidebar .search-bar-container,
+.sidebar .price-filter-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 24px 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Área de Produtos ajustada para preencher o resto do espaço */
+
+/* Responsividade: Volta a empilhar em telas pequenas */
+@media (max-width: 900px) {
+  .main-content-layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    position: static;
+  }
 }
