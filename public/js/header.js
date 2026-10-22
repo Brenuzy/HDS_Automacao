@@ -199,12 +199,10 @@ function montarHeader() {
       const href = link.getAttribute("href");
       if (!href) return;
 
-      // Ignora links externos (como o de Manuais)
       if (href.startsWith("http://") || href.startsWith("https://")) return;
 
       link.classList.remove("active");
 
-      // Trata a home e subpáginas
       const eHome = href === "/" && (caminhoAtual === "/" || caminhoAtual === "/index.html");
       const eSubpagina = href !== "/" && caminhoAtual.startsWith(href);
 

@@ -43,6 +43,10 @@
   font-family: Arial, sans-serif;
 }
 
+.event-card:hover {
+  animation: cardhover 0.5s;
+}
+
 .event-card-image {
   width: 100%;
   height: 200px;
@@ -376,4 +380,23 @@
   display: block;
   position: relative;
   margin-top: 40px;
+}
+
+@keyframes card hover{
+    from {
+    }
+    to { 
+        transform: scale(1.01);
+    }
+}
+
+@keyframes card appear{
+    from {
+      opacity:0;
+        transform: scale(.8);
+    }
+    to { 
+      opacity: 1;
+        transform: scale(1);
+    }
 }

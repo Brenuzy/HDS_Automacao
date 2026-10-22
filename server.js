@@ -31,19 +31,21 @@ app.get('/produtos', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'produtos.html'));
 });
 
-// todos products
-app.get('/produtos/:id', (req, res) => {
+//------------------------------------------------------------------
+//              T O D O S    O S    P R O D U T O S
+//------------------------------------------------------------------
+
+app.get('/:id', (req, res) => {
     const { id } = req.params;
-    // Adiciona 'produtos' como uma pasta no caminho
-    const filePath = path.join(__dirname, 'pages', 'produtos', `${id}.html`);
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            res.status(404).send('<h1>Página não encontrada!</h1>');
-        }
-    });
+    res.sendFile(path.join(__dirname, 'pages', 'allproducts', `${id}.html`), (err) => {
+        })
 });
 
-// rota não encontrada
+//------------------------------------------------------------------
+//                S E R V E R    /    E R R O S
+//------------------------------------------------------------------
+
+// caso rota não encontrada
 app.use((req, res) => {
     res.status(404).send('<h1>Página não encontrada!</h1>');
 });
