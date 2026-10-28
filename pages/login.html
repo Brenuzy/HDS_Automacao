@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Conta - HDS Automações</title>
-  <link rel="stylesheet" href="login.css">
-  <script src="login.js"></script>
+  <title>HDS Automações - Login</title>
+  <link rel="stylesheet" href="/css/login.css">
+  <script src="/js/login.js"></script>
 </head>
 <body>  
+    
+  <div id="header-placeholder"></div>
+  <script src="/js/header.js"></script> 
 
-    <!-- ESTRUTURA HTML DO SEU FORMULÁRIO -->
   <div class="container">
     
     <!-- FORMULÁRIO DE LOGIN -->
@@ -29,7 +31,7 @@
       <button type="submit">ENTRAR</button>
       
       <p class="switch">
-        Não tem conta? <a href="#" onclick="toggleForm()">Cadastre-se</a>
+        Não possui uma conta? <a href="#" onclick="toggleForm()">Cadastre-se</a>
       </p>
     </form>
 
@@ -61,53 +63,8 @@
 
   </div>
 
-  <!-- SCRIPT PARA INTERAÇÃO DOS FORMULÁRIOS -->
-  <script>
-    function toggleForm() {
-      document.getElementById('loginForm').classList.toggle('hidden');
-      document.getElementById('registerForm').classList.toggle('hidden');
-    }
-
-    function fazerLogin(event) {
-  event.preventDefault();
-
-  const email = document.getElementById('loginEmail').value;
-  const senha = document.getElementById('loginSenha').value;
-
-  fetch('/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, senha })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.sucesso) {
-      window.location.href = "../paginainicial/paginainicial.html";
-    } else {
-      alert("E-mail ou senha incorretos!");
-    }
-  });
-}
-
-function fazerLogin(event) {
-  // Impede o formulário de recarregar a página imediatamente
-  event.preventDefault();
-
-  // Pega os valores digitados
-  const email = document.getElementById('loginEmail').value;
-  const senha = document.getElementById('loginSenha').value;
-
-  // Validação simples (Substitua depois pela validação no seu backend)
-  if (email === "usuario@email.com" && senha === "123456") {
-    alert("Login realizado com sucesso!");
-    
-    window.location.href = "../paginainicial/paginainicial.html";
-  } else {
-    alert("E-mail ou senha incorretos!");
-  }
-}
-
-  </script>
-
+  <!-- rodapé -->
+  <div id="footer-placeholder"></div>
+  <script src="/js/footer.js"></script> 
 </body>
 </html>

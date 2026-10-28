@@ -44,7 +44,7 @@
 }
 
 .event-card:hover {
-  animation: cardhover 0.5s;
+  animation: card hover 0.5s;
 }
 
 .event-card-image {
@@ -137,7 +137,7 @@
   transform-origin: bottom right;
   transition: transform 0.3s ease-in-out;
   pointer-events: none;
-  border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 50px;
   border-bottom-right-radius: 5px;
 }
 

@@ -20,6 +20,11 @@
       <li><a href="/sobre">Sobre nós</a></li>
     </ul>
   </nav>
+
+  <div class="login">
+    <a href="/login">Login</a>
+  </div>
+
 </header>
 
 <style>
