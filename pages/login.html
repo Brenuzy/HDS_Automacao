@@ -12,55 +12,32 @@
   <div id="header-placeholder"></div>
   <script src="/js/header.js"></script> 
 
-  <div class="container">
-    
-    <!-- FORMULÁRIO DE LOGIN -->
-    <form id="loginForm" onsubmit="fazerLogin(event)">
-      <h2>Login</h2>
-      
-      <div class="field">
-        <label for="loginEmail">E-mail</label>
-        <input type="email" id="loginEmail" required>
+    <!-- Área Principal do Formulário -->
+    <main class="main-content">
+      <div class="card">
+        <h2>Criar Conta</h2>
+        <form id="cadForm">
+          <div class="field">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" required placeholder="Digite o seu nome">
+          </div>
+          <div class="field">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" required placeholder="exemplo@dominio.com">
+          </div>
+          <div class="field">
+            <label for="senha">Palavra-passe:</label>
+            <input type="password" id="senha" minlength="6" required placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="field">
+            <label for="confirmarSenha">Confirmar Palavra-passe:</label>
+            <input type="password" id="confirmarSenha" required placeholder="Repita a palavra-passe">
+          </div>
+          <button type="submit">Cadastrar</button>
+        </form>
+        <div id="msg"></div>
       </div>
-      
-      <div class="field">
-        <label for="loginSenha">Senha</label>
-        <input type="password" id="loginSenha" required>
-      </div>
-      
-      <button type="submit">ENTRAR</button>
-      
-      <p class="switch">
-        Não possui uma conta? <a href="#" onclick="toggleForm()">Cadastre-se</a>
-      </p>
-    </form>
-
-    <!-- FORMULÁRIO DE CADASTRO -->
-    <form id="registerForm" class="hidden">
-      <h2>Cadastro</h2>
-      
-      <div class="field">
-        <label>Nome</label>
-        <input type="text" required>
-      </div>
-      
-      <div class="field">
-        <label>E-mail</label>
-        <input type="email" required>
-      </div>
-      
-      <div class="field">
-        <label>Senha</label>
-        <input type="password" required>
-      </div>
-      
-      <button type="submit">CADASTRAR</button>
-      
-      <p class="switch">
-        Já tem conta? <a href="#" onclick="toggleForm()">Fazer Login</a>
-      </p>
-    </form>
-
+    </main>
   </div>
 
   <!-- rodapé -->
