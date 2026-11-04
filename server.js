@@ -30,11 +30,17 @@ app.get('/contatos', (req, res) => {
 app.get('/produtos', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'produtos.html'));
 });
-
+ 
 // rota para a pag Login
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'login.html'))
 });
+ 
+// rota para a pag Admin
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages', 'admin.html'))
+});
+
 
 //------------------------------------------------------------------
 //              T O D O S    O S    P R O D U T O S

@@ -1,31 +1,45 @@
 (function () {
   const headerHTML = `
     <!-- Top Bar -->
-  <div class="top-bar">
-    <span>Soluções para automação industrial de alta performance</span>
-    <span class="region">Brasil (BRL R$)</span>
-  </div>
-
-<!-- Mais Menus -->
-<header class="header-container">
-  <div class="logo">
-      <a href="/"><img src="/images/logohdsv3.png" alt="Logo"></a>
+    <div class="top-bar">
+      <span>Soluções para automação industrial de alta performance</span>
+      <span class="region">Brasil (BRL R$)</span>
     </div>
-  <nav class="main-nav">
 
-    <ul>
-      <li><a href="/produtos">Produtos</a></li>
-      <li><a href="/solucoes">Soluções</a></li>
-      <li><a href="https://www.us.contrinex.com/pages/downloads/">Manuais</a></li>
-      <li><a href="/sobre">Sobre nós</a></li>
-    </ul>
-  </nav>
+    <!-- Header Principal -->
+    <header class="header-container">
+      <div class="logo">
+        <a href="/"><img src="/images/logohdsv3.png" alt="Logo"></a>
+      </div>
+      
+      <nav class="main-nav">
+        <ul>
+          <li><a href="/produtos">Produtos</a></li>
+          <li><a href="/solucoes">Soluções</a></li>
+          <li><a href="https://www.us.contrinex.com/pages/downloads/">Manuais</a></li>
+          <li><a href="/sobre">Sobre nós</a></li>
+          <li><a href="/admin" id="menu-admin" style="display: none;">Admin</a></li>
+        </ul>
+      </nav>
 
-  <div class="login">
-    <a href="/login">Login</a>
-  </div>
+      <!-- Ações do Header (Pesquisa, Perfil e Login) -->
+      <div class="header-actions">
+        <div class="searchbar-box">
+          <svg class="searchbar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Search for..." class="searchbar-input">
+        </div>
 
-</header>
+        <a href="/login" class="profile-btn" aria-label="Perfil">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+
+    </header>
 
 <style>
 .top-bar {
@@ -46,6 +60,11 @@
   z-index: 1000;
   background-color: #0b132b;
   background: linear-gradient(90deg, #06184c 30.67%, #0c2661 50.96%, #143885 68.88%, #0d2b7c);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
 .main-nav {
@@ -53,12 +72,12 @@
   align-items: center;
   justify-content: flex-start;
   gap: 40px;
-  padding: 35px 40px;
+  padding: 35px 0;
   box-sizing: border-box;
 }
 
 .logo {
-  margin-left: 80px;
+  margin-left: 40px;
 }
 
 .logo img {
@@ -67,37 +86,6 @@
   display: block;
   transform: scale(2);
   transform-origin: left center;
-  margin-left: -40px;
-}
-
-.main-nav ul {
-  display: flex;
-  gap: 30px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.main-nav ul li a {
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.active {
-  transform: scale(1.5);
-  color: #00a8ff;
-  font-weight: bold;
-  text-shadow: 0 0 10px rgba(0, 168, 255, 0.8), 0 0 20px rgba(0, 168, 255, 0.4);
-  border-color: #00a8ff;
-  border-radius: 16px;
 }
 
 .main-nav ul {
@@ -111,8 +99,14 @@
   padding: 0;
 }
 
+.main-nav ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
 .main-nav a {
-  display:flex;
+  display: inline-block;
   text-align: center;
   justify-content: center;
   margin: 0 auto;
@@ -122,11 +116,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease;
   position: relative;
-  display: inline-block;
-  text-decoration: none;
-  transition: all 0.3s ease; 
 }
 
 .main-nav a:hover {
@@ -134,7 +125,6 @@
   color: #ffffff;
   font-weight: bold;
   text-shadow: 0 0 10px rgba(0, 168, 255, 0.8), 0 0 20px rgba(0, 168, 255, 0.4);
-
   border-color: #00a8ff;
   border-radius: 16px;
 }
@@ -169,7 +159,88 @@
   height: 3px;
   box-shadow: 0 0 16px #ffffff, 0 0 25px #00a8ff;
   transition: all 0.1s ease;
-  transform: opacity (1);
+  opacity: 1;
+}
+
+.active {
+  transform: scale(1.5);
+  color: #00a8ff;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(0, 168, 255, 0.8), 0 0 20px rgba(0, 168, 255, 0.4);
+  border-color: #00a8ff;
+  border-radius: 16px;
+}
+
+/* ================= BARRA DE PESQUISA, PERFIL E LOGIN ================= */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.searchbar-box {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 8px 16px;
+  width: 180px;
+  transition: background-color 0.2s ease;
+}
+
+.searchbar-box:focus-within {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.searchbar-icon {
+  width: 18px;
+  height: 18px;
+  stroke: #7db0ff;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.searchbar-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+}
+
+.searchbar-input::placeholder {
+  color: #60a5fa;
+  opacity: 0.85;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.profile-btn:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.profile-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: #ffffff;
+}
+
+.login a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .home-content1, 
@@ -180,10 +251,9 @@
   z-index: 2;
 }
 </style>
+  `;
 
-    `;
-
-function montarHeader() {
+  function montarHeader() {
     const alvo = document.getElementById("header-placeholder");
 
     if (alvo) {
@@ -194,6 +264,7 @@ function montarHeader() {
     }
 
     marcarLinkAtivo();
+    verificarPermissaoAdmin();
   }
 
   function marcarLinkAtivo() {
@@ -215,6 +286,19 @@ function montarHeader() {
         link.classList.add("active");
       }
     });
+  }
+
+  function verificarPermissaoAdmin() {
+    var usuario = JSON.parse(localStorage.getItem("usuario"));
+    var menuAdmin = document.getElementById("menu-admin");
+
+    if (menuAdmin) {
+      if (usuario && usuario.perfil === "admin") {
+        menuAdmin.style.display = "inline-block";
+      } else {
+        menuAdmin.style.display = "none";
+      }
+    }
   }
 
   if (document.readyState === "loading") {

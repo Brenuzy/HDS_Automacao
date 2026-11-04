@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Início - HDS Automação</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <script src="/js/admin.js"></script>
+  <link rel="icon" type="image/x-icon" href="/images/profilefinalv.png?v=2">
+  <script>
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    if (!usuario || usuario.perfil !== "admin") {
+      window.location.href = "/login";
+    }
+  </script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+  <script src="/js/header.js"></script> 
+
+
+  <h1>Bem-vindo ao Painel de Administração</h1>
+<!-- rodapé -->
+  <div id="footer-placeholder"></div>
+  <script src="/js/footer.js"></script> 
+</body>
+</html>                                                                                                                                                                                                         
