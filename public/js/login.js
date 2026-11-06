@@ -1,10 +1,11 @@
-function logar() {
+function logar(event) {
+  if (event) event.preventDefault(); // Impede o recarregamento automático do formulário ao errar a senha
+
   const loginDigitado = document.getElementById('login').value;
   const senhaDigitada = document.getElementById('senha').value;
 
   let usuarioLogado = null;
 
-  // 1. Validação simples das credenciais
   if (loginDigitado === "admin" && senhaDigitada === "admin") {
     usuarioLogado = {
       nome: "Administrador",
@@ -19,16 +20,19 @@ function logar() {
     };
   }
 
-  // 2. Se a autenticação der certo, SALVA NO LOCALSTORAGE
   if (usuarioLogado) {
-    // Converte o objeto para texto JSON e grava na chave "usuario"
+    // Guarda o utilizador no localStorage e salva a mensagem temporária para a próxima página
     localStorage.setItem("usuario", JSON.stringify(usuarioLogado));
-    
-    alert(`Bem-vindo, ${usuarioLogado.nome}!`);
+    sessionStorage.setItem("boasVindas", usuarioLogado.nome);
 
-    // Redireciona para a página inicial
+    // Redireciona imediatamente
     window.location.href = "/";
   } else {
-    alert("Login ou senha incorretos!");
+    // Exibe a mensagem de erro na página de login sem usar alert
+    const msgElement = document.getElementById("msg");
+    if (msgElement) {
+      msgElement.textContent = "Login ou senha incorretos!";
+      msgElement.className = "error";
+    }
   }
 }

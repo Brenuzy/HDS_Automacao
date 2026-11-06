@@ -1,3 +1,9 @@
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,58 +14,65 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4f7f9;
   min-height: 100vh;
+  background: linear-gradient(135deg, #0b318f, #031548);
 }
 
-/* Área do Conteúdo */
 .main-content {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
 }
 
-/* Cartão do Formulário */
 .card {
-  width: 100%;
-  max-width: 380px;
-  background: #ffffff;
+  width: 600px;
+  max-width: 600px;
   padding: 32px;
-  border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .card h2 {
-  margin-bottom: 24px;
-  color: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: #ffffff;
   font-size: 1.5rem;
 }
 
 .field {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
   margin-bottom: 6px;
   font-weight: 600;
-  color: #4a5568;
+  color: #ffffff;
   font-size: 0.9rem;
 }
 
 input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
+  height: 50px;
+  padding: 0 14px;
   font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  color: #ffffff;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 1);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.2s ease;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+input:active {
+  transform: scale(0.99);
 }
 
 input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+
 }
 
 button {
@@ -80,6 +93,17 @@ button:hover {
   background-color: #0056b3;
 }
 
+button:focus{
+    transform: scale(1.01);
+  border: 2px solid transparent;
+  background: conic-gradient(from var(--angle), transparent 40%, rgba(255, 255, 255, 0.4) 70%, #0056b3 95%, transparent) border-box;
+  -webkit-mask: linear-gradient(#0056b3 0 0) padding-box, linear-gradient(#0056b3 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotate-glow 1s linear infinite;
+  box-shadow: 0 0 15px rgba(#0056b3, 1);
+}
+
 #msg {
   margin-top: 16px;
   font-weight: 600;
@@ -92,6 +116,13 @@ button:hover {
 
 .error {
   color: #dc3545;
+}
+
+/* Rotação do gradiente de brilho */
+@keyframes rotate-glow {
+  to {
+    --angle: 360deg;
+  }
 }
 
 /* Adaptabilidade para Ecrãs Pequenos */

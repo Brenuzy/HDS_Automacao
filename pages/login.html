@@ -15,16 +15,18 @@
     <!-- Área Principal do Formulário -->
     <main class="main-content">
       <div class="card">
-        <h2>Login</h2>
+        <h2><strong>LOGIN</strong></h2>
         <form onsubmit="event.preventDefault(); logar();">
           <div class="field">
           <input type="text" id="login" placeholder="Login" required>
           </div>
           <div class="field">
-            <label for="senha">Senha</label>
+            <label for="senha"></label>
             <input type="password" id="senha" placeholder="Senha" required>
           </div>
-          <button type="submit">Entrar</button>
+            <button type="submit">Entrar</button>
+          <div id="msg"></div>
+          <div class="switch">Não tem uma conta?<strong> Cadastre-se.</strong></div>
         </form>
     </main>
   </div>

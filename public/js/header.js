@@ -38,7 +38,7 @@
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </a>
-
+      </div>
     </header>
 
 <style>
@@ -183,19 +183,17 @@
   align-items: center;
   background-color: rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-  padding: 8px 16px;
-  width: 180px;
+  padding: 0 16px;
+  height: 38px;
+  max-width: 180px;
+  box-sizing: border-box;
   transition: background-color 0.2s ease;
-}
-
-.searchbar-box:focus-within {
-  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .searchbar-icon {
   width: 18px;
   height: 18px;
-  stroke: #7db0ff;
+  stroke: #ffffff;
   margin-right: 8px;
   flex-shrink: 0;
 }
@@ -207,10 +205,12 @@
   color: #ffffff;
   font-size: 14px;
   width: 100%;
+  height: 100%;
+  padding: 0;
 }
 
 .searchbar-input::placeholder {
-  color: #60a5fa;
+  color: #ffffff;
   opacity: 0.85;
 }
 
@@ -218,11 +218,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.08);
   text-decoration: none;
+  box-sizing: border-box;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -250,6 +251,47 @@
   max-width: 500px;
   z-index: 2;
 }
+
+/* ================= TOAST BOAS-VINDAS ================= */
+.toast-glass {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  padding: 14px 24px;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  animation: slideInLeft 0.5s ease-out forwards, slideOutLeft 0.5s ease-in 3.5s forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+}
 </style>
   `;
 
@@ -265,6 +307,7 @@
 
     marcarLinkAtivo();
     verificarPermissaoAdmin();
+    exibirBoasVindas(); 
   }
 
   function marcarLinkAtivo() {
@@ -298,6 +341,24 @@
       } else {
         menuAdmin.style.display = "none";
       }
+    }
+  }
+
+  function exibirBoasVindas() {
+    const nomeUsuario = sessionStorage.getItem("boasVindas");
+
+    if (nomeUsuario) {
+      const toast = document.createElement("div");
+      toast.className = "toast-glass";
+      toast.textContent = `Bem-vindo, ${nomeUsuario}!`;
+
+      document.body.appendChild(toast);
+
+      sessionStorage.removeItem("boasVindas");
+
+      setTimeout(() => {
+        toast.remove();
+      }, 4000);
     }
   }
 
