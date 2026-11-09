@@ -1,115 +1,131 @@
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
-const cors = require('cors');
 const bcrypt = require('bcrypt');
 
 const app = express();
-const DOOR = 3000;
+const PORT = 3000;
 
-// ------------------------------------------------------------------
-//                      M I D D L E W A R E S
-// ------------------------------------------------------------------
-app.use(cors());
 app.use(express.json());
-// Servir ficheiros estáticos (CSS, JS, Imagens da pasta public)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ------------------------------------------------------------------
-//                 B A N C O   D E   D A D O S
+//                        B A N C O   D E   D A D O S
 // ------------------------------------------------------------------
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '', // Sua senha do MySQL
+  password: 'andrade@2710', // coloque a senha do MySQL se houver
   database: 'BDHDS'
 });
 
 db.connect((err) => {
   if (err) {
-    console.error('Erro ao ligar ao MySQL:', err.message);
+    console.error('Erro ao conectar ao MySQL:', err.message);
     return;
   }
-  console.log('Conectado à base de dados BDHDS!');
+  console.log('Conectado ao banco BDHDS com sucesso!');
 });
 
 // ------------------------------------------------------------------
-//                   R O T A S   D E   P Á G I N A S
+//                              A P I
 // ------------------------------------------------------------------
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pages', 'paginainicial.html'));
-});
 
-app.get('/sobre', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pages', 'sobre.html'));
-});
-
-app.get('/solucoes', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pages', 'solucoes.html'));
-});
-
-app.get('/contatos', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pages', 'contatos.html'));
-});
-
-app.get('/produtos', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pages', 'produtos.html'));
-});
-
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pages', 'login.html'));
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pages', 'admin.html'));
-});
-
-// ------------------------------------------------------------------
-//                      A P I / A U T E N T I C A Ç Ã O
-// ------------------------------------------------------------------
-app.post('/cadastrar', async (req, res) => {
+// Cadastro
+app.post('/api/cadastrar', async (req, res) => {
   const { nome, login, senha } = req.body;
+
+  if (!nome || !login || !senha) {
+    return res.status(400).json({ mensagem: 'Preencha nome, login e senha.' });
+  }
 
   try {
     const senhaHash = await bcrypt.hash(senha, 10);
     const sql = 'INSERT INTO usuarios (nome, login, senha) VALUES (?, ?, ?)';
 
-    db.query(sql, [nome, login, senhaHash], (err, result) => {
+    db.query(sql, [nome, login, senhaHash], (err) => {
       if (err) {
         if (err.code === 'ER_DUP_ENTRY') {
-          return res.status(400).json({ mensagem: 'Este login já existe.' });
+          return res.status(400).json({ mensagem: 'Este login já está em uso.' });
         }
-        return res.status(500).json({ mensagem: 'Erro ao guardar utilizador.' });
+        console.error('Erro na query de cadastro:', err);
+        return res.status(500).json({ mensagem: 'Erro ao salvar usuário no banco.' });
       }
-      return res.status(201).json({ mensagem: 'Utilizador cadastrado com sucesso!' });
+      return res.status(201).json({ mensagem: 'Cadastro realizado! Faça login.' });
     });
   } catch (erro) {
-    res.status(500).json({ mensagem: 'Erro interno no servidor.' });
+    console.error(erro);
+    return res.status(500).json({ mensagem: 'Erro interno no servidor.' });
   }
 });
 
-// Rota dinâmica para produtos específicos (ex: /produto1)
-app.get('/produto/:id', (req, res, next) => {
-  const { id } = req.params;
-  const file = path.join(__dirname, 'pages', 'allproducts', `${id}.html`);
-  
-  res.sendFile(file, (err) => {
+// Login
+app.post('/api/login', (req, res) => {
+  const { login, senha } = req.body;
+
+  if (!login || !senha) {
+    return res.status(400).json({ mensagem: 'Informe login e senha.' });
+  }
+
+  const sql = 'SELECT nome, login, senha, perfil FROM usuarios WHERE login = ?';
+
+  db.query(sql, [login], async (err, rows) => {
     if (err) {
-      next(); // Passa para a rota 404 caso o ficheiro não exista
+      console.error('Erro na query de login:', err);
+      return res.status(500).json({ mensagem: 'Erro ao consultar o banco.' });
+    }
+
+    if (rows.length === 0) {
+      return res.status(401).json({ mensagem: 'Login ou senha incorretos!' });
+    }
+
+    try {
+      const usuario = rows[0];
+      const senhaOk = await bcrypt.compare(senha, usuario.senha);
+
+      if (!senhaOk) {
+        return res.status(401).json({ mensagem: 'Login ou senha incorretos!' });
+      }
+
+      return res.json({
+        mensagem: 'Login realizado com sucesso!',
+        usuario: { nome: usuario.nome, login: usuario.login, perfil: usuario.perfil }
+      });
+    } catch (erro) {
+      console.error(erro);
+      return res.status(500).json({ mensagem: 'Erro interno no servidor.' });
     }
   });
 });
 
 // ------------------------------------------------------------------
-//              E R R O   4 0 4 (Sempre no final de tudo)
+//                          P Á G I N A S
 // ------------------------------------------------------------------
+const pagina = (arquivo) => (req, res) =>
+  res.sendFile(path.join(__dirname, 'pages', arquivo));
+
+app.get('/', pagina('paginainicial.html'));
+app.get('/sobre', pagina('sobre.html'));
+app.get('/solucoes', pagina('solucoes.html'));
+app.get('/contatos', pagina('contatos.html'));
+app.get('/cart', pagina('carrinho.html'));
+app.get('/produtos', pagina('produtos.html'));
+app.get('/login', pagina('login.html'));
+app.get('/admin', pagina('admin.html'));
+
+// Todos os produtos: /nome-do-produto -> pages/allproducts/nome-do-produto.html
+app.get('/:id', (req, res, next) => {
+  const id = path.basename(req.params.id); // evita "../" na URL
+  res.sendFile(path.join(__dirname, 'pages', 'allproducts', `${id}.html`), (err) => {
+    if (err) next(); // não achou o arquivo: cai no 404 abaixo
+  });
+});
+
+// Rota não encontrada
 app.use((req, res) => {
   res.status(404).send('<h1>Página não encontrada!</h1>');
 });
 
-// ------------------------------------------------------------------
-//                          S E R V I D O R
-// ------------------------------------------------------------------
-app.listen(DOOR, () => {
-  console.log(`Servidor a rodar em http://localhost:${DOOR}`);
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });

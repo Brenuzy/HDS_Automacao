@@ -1,6 +1,6 @@
 (function () {
   const headerHTML = `
-    <!-- Top Bar -->
+  <!-- Top Bar -->
     <div class="top-bar">
       <span>Soluções para automação industrial de alta performance</span>
       <span class="region">Brasil (BRL R$)</span>
@@ -22,7 +22,7 @@
         </ul>
       </nav>
 
-      <!-- Ações do Header (Pesquisa, Perfil e Login) -->
+      <!-- Ações do Header (Pesquisa, Perfil e Carrinho) -->
       <div class="header-actions">
         <div class="searchbar-box">
           <svg class="searchbar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -38,8 +38,18 @@
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </a>
+
+        <a href="/cart" class="cart-link" aria-label="Carrinho de Compras">
+          <div class="cart-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              <circle cx="9" cy="20" r="1" fill="currentColor"></circle>
+              <circle cx="18" cy="20" r="1" fill="currentColor"></circle>
+            </svg>
+          </div>
+        </a>
       </div>
-    </header>
+  </header>
 
 <style>
 .top-bar {
@@ -196,6 +206,7 @@
   stroke: #ffffff;
   margin-right: 8px;
   flex-shrink: 0;
+  display: block;
 }
 
 .searchbar-input {
@@ -225,6 +236,7 @@
   text-decoration: none;
   box-sizing: border-box;
   transition: background-color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .profile-btn:hover {
@@ -235,6 +247,40 @@
   width: 20px;
   height: 20px;
   stroke: #ffffff;
+  display: block;
+}
+
+.cart-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cart-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.cart-button:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.cart-button svg {
+  width: 20px;
+  height: 20px;
+  stroke: #ffffff;
+  color: #ffffff;
+  display: block;
 }
 
 .login a {

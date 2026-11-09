@@ -1,77 +1,90 @@
 let modoCadastro = false;
 
+function mostrarMsg(texto, tipo) {
+  const msg = document.getElementById('msg');
+  if (!msg) return;
+  msg.textContent = texto;
+  msg.className = tipo; // 'error' ou 'success'
+}
+
 function alternarModo() {
   modoCadastro = !modoCadastro;
 
-  // Alterna textos da interface
   document.getElementById('titulo').innerText = modoCadastro ? 'CADASTRO' : 'LOGIN';
   document.getElementById('btnSubmit').innerText = modoCadastro ? 'Cadastrar' : 'Entrar';
   document.getElementById('txtSwitch').innerText = modoCadastro ? 'Já tem uma conta, ' : 'Não tem uma conta,';
   document.getElementById('btnToggle').innerText = modoCadastro ? 'Entrar.' : 'Cadastre-se.';
 
-  // Exibe/oculta e ativa/desativa os campos de cadastro
-  const camposCadastro = document.querySelectorAll('.campo-cadastro');
-  camposCadastro.forEach(campo => {
+  // Mostra/oculta o campo de nome e só exige ele no cadastro
+  document.querySelectorAll('.campo-cadastro').forEach((campo) => {
     campo.style.display = modoCadastro ? 'block' : 'none';
     const input = campo.querySelector('input');
     if (input) {
-      input.disabled = !modoCadastro; // Evita que campos ocultos bloqueiem o envio do formulário
+      input.disabled = !modoCadastro;
+      input.required = modoCadastro;
     }
   });
+
+  document.getElementById('msg').textContent = '';
 }
 
-// A sua função principal acionada pelo onsubmit
-function logar() {
-  const loginInput = document.getElementById('login').value;
-  const senhaInput = document.getElementById('senha').value;
+// Chamada pelo onsubmit do formulário: <form onsubmit="enviarFormulario(event)">
+async function enviarFormulario(event) {
+  event.preventDefault();
+
+  const login = document.getElementById('login').value.trim();
+  const senha = document.getElementById('senha').value;
 
   if (modoCadastro) {
-    const nomeInput = document.getElementById('nome').value;
-    console.log("Executando Cadastro:", { nome: nomeInput, login: loginInput, senha: senhaInput });
-    // Insira aqui o seu código de cadastro
+    const nome = document.getElementById('nome').value.trim();
+    await cadastrar(nome, login, senha);
   } else {
-    console.log("Executando Login:", { login: loginInput, senha: senhaInput });
-    // Insira aqui o seu código de login
+    await logar(login, senha);
   }
 }
 
+async function cadastrar(nome, login, senha) {
+  try {
+    const resposta = await fetch('/api/cadastrar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, login, senha })
+    });
 
+    const dados = await resposta.json();
 
-function logar(event) {
-  if (event) event.preventDefault(); // Impede o recarregamento automático do formulário ao errar a senha
-
-  const loginDigitado = document.getElementById('login').value;
-  const senhaDigitada = document.getElementById('senha').value;
-
-  let usuarioLogado = null;
-
-  if (loginDigitado === "admin" && senhaDigitada === "admin") {
-    usuarioLogado = {
-      nome: "Administrador",
-      login: "admin",
-      perfil: "admin"
-    };
-  } else if (loginDigitado === "user" && senhaDigitada === "user") {
-    usuarioLogado = {
-      nome: "user",
-      login: "user",
-      perfil: "user"
-    };
-  }
-
-  if (usuarioLogado) {
-    // Guarda o utilizador no localStorage e salva a mensagem temporária para a próxima página
-    localStorage.setItem("usuario", JSON.stringify(usuarioLogado));
-    sessionStorage.setItem("boasVindas", usuarioLogado.nome);
-
-    // Redireciona imediatamente
-    window.location.href = "/";
-  } else {
-    // Exibe a mensagem de erro na página de login sem usar alert
-    const msgElement = document.getElementById("msg");
-    if (msgElement) {
-      msgElement.textContent = "Login ou senha incorretos!";
-      msgElement.className = "error";
+    if (resposta.ok) {
+      alternarModo(); // volta para a tela de login
+      document.getElementById('senha').value = '';
+      mostrarMsg(dados.mensagem, 'success');
+    } else {
+      mostrarMsg(dados.mensagem, 'error');
     }
+  } catch (erro) {
+    console.error(erro);
+    mostrarMsg('Erro ao conectar com o servidor.', 'error');
+  }
+}
+
+async function logar(login, senha) {
+  try {
+    const resposta = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ login, senha })
+    });
+
+    const dados = await resposta.json();
+
+    if (resposta.ok) {
+      localStorage.setItem('usuario', JSON.stringify(dados.usuario));
+      sessionStorage.setItem('boasVindas', dados.usuario.nome);
+      window.location.href = '/';
+    } else {
+      mostrarMsg(dados.mensagem, 'error');
+    }
+  } catch (erro) {
+    console.error(erro);
+    mostrarMsg('Erro ao conectar com o servidor.', 'error');
   }
 }
