@@ -1,3 +1,42 @@
+let modoCadastro = false;
+
+function alternarModo() {
+  modoCadastro = !modoCadastro;
+
+  // Alterna textos da interface
+  document.getElementById('titulo').innerText = modoCadastro ? 'CADASTRO' : 'LOGIN';
+  document.getElementById('btnSubmit').innerText = modoCadastro ? 'Cadastrar' : 'Entrar';
+  document.getElementById('txtSwitch').innerText = modoCadastro ? 'Já tem uma conta, ' : 'Não tem uma conta,';
+  document.getElementById('btnToggle').innerText = modoCadastro ? 'Entrar.' : 'Cadastre-se.';
+
+  // Exibe/oculta e ativa/desativa os campos de cadastro
+  const camposCadastro = document.querySelectorAll('.campo-cadastro');
+  camposCadastro.forEach(campo => {
+    campo.style.display = modoCadastro ? 'block' : 'none';
+    const input = campo.querySelector('input');
+    if (input) {
+      input.disabled = !modoCadastro; // Evita que campos ocultos bloqueiem o envio do formulário
+    }
+  });
+}
+
+// A sua função principal acionada pelo onsubmit
+function logar() {
+  const loginInput = document.getElementById('login').value;
+  const senhaInput = document.getElementById('senha').value;
+
+  if (modoCadastro) {
+    const nomeInput = document.getElementById('nome').value;
+    console.log("Executando Cadastro:", { nome: nomeInput, login: loginInput, senha: senhaInput });
+    // Insira aqui o seu código de cadastro
+  } else {
+    console.log("Executando Login:", { login: loginInput, senha: senhaInput });
+    // Insira aqui o seu código de login
+  }
+}
+
+
+
 function logar(event) {
   if (event) event.preventDefault(); // Impede o recarregamento automático do formulário ao errar a senha
 
