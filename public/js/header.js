@@ -87,7 +87,7 @@
 }
 
 .logo {
-  margin-left: 40px;
+  margin-left: 0px;
 }
 
 .logo img {
@@ -191,7 +191,7 @@
 .searchbar-box {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
   padding: 0 16px;
   height: 38px;
@@ -232,7 +232,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.05);
   text-decoration: none;
   box-sizing: border-box;
   transition: background-color 0.2s ease, transform 0.2s ease;
@@ -240,7 +240,7 @@
 }
 
 .profile-btn:hover {
-  background-color: rgba(255, 255, 255, 0.18);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .profile-btn svg {
@@ -262,7 +262,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -272,7 +272,7 @@
 }
 
 .cart-button:hover {
-  background-color: rgba(255, 255, 255, 0.18);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .cart-button svg {
@@ -309,7 +309,6 @@
   color: #ffffff;
   padding: 14px 24px;
   border: 2px solid #ffffff;
-  border-radius: 8px;
   font-weight: bold;
   font-size: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -353,6 +352,7 @@
 
     marcarLinkAtivo();
     verificarPermissaoAdmin();
+    atualizarLinkPerfil();
     exibirBoasVindas(); 
   }
 
@@ -375,6 +375,13 @@
         link.classList.add("active");
       }
     });
+  }
+
+  // Logado -> /perfil | Não logado -> /login
+  function atualizarLinkPerfil() {
+    const botao = document.querySelector(".profile-btn");
+    if (!botao) return;
+    botao.setAttribute("href", localStorage.getItem("token") ? "/perfil" : "/login");
   }
 
   function verificarPermissaoAdmin() {

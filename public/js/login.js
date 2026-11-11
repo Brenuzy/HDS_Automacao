@@ -77,6 +77,7 @@ async function logar(login, senha) {
     const dados = await resposta.json();
 
     if (resposta.ok) {
+      localStorage.setItem('token', dados.token);
       localStorage.setItem('usuario', JSON.stringify(dados.usuario));
       sessionStorage.setItem('boasVindas', dados.usuario.nome);
       window.location.href = '/';

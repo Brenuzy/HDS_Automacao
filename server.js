@@ -2,9 +2,17 @@ const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 3000;
+
+// Chave usada para assinar os tokens de login.
+// Em produção, defina a variável de ambiente JWT_SECRET com um valor longo e aleatório.
+const JWT_SECRET = process.env.JWT_SECRET || 'troque-esta-chave-em-desenvolvimento';
+if (!process.env.JWT_SECRET) {
+  console.warn('AVISO: JWT_SECRET não definido. Usando chave de desenvolvimento.');
+}
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -87,14 +95,52 @@ app.post('/api/login', (req, res) => {
         return res.status(401).json({ mensagem: 'Login ou senha incorretos!' });
       }
 
+      // Token que prova quem está logado (vale por 2 horas)
+      const token = jwt.sign({ login: usuario.login }, JWT_SECRET, { expiresIn: '2h' });
+
       return res.json({
         mensagem: 'Login realizado com sucesso!',
+        token,
         usuario: { nome: usuario.nome, login: usuario.login, perfil: usuario.perfil }
       });
     } catch (erro) {
       console.error(erro);
       return res.status(500).json({ mensagem: 'Erro interno no servidor.' });
     }
+  });
+});
+
+// Middleware: só deixa passar quem enviou um token válido
+function autenticar(req, res, next) {
+  const cabecalho = req.headers.authorization || '';
+  const token = cabecalho.startsWith('Bearer ') ? cabecalho.slice(7) : null;
+
+  if (!token) {
+    return res.status(401).json({ mensagem: 'Não autenticado.' });
+  }
+
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    req.login = payload.login; // quem está logado, definido pelo servidor
+    next();
+  } catch (erro) {
+    return res.status(401).json({ mensagem: 'Sessão inválida ou expirada.' });
+  }
+}
+
+// Perfil da conta logada (o servidor descobre quem é pelo token, nunca pela URL)
+app.get('/api/me', autenticar, (req, res) => {
+  const sql = 'SELECT nome, login, perfil FROM usuarios WHERE login = ?';
+
+  db.query(sql, [req.login], (err, rows) => {
+    if (err) {
+      console.error('Erro na query de perfil:', err);
+      return res.status(500).json({ mensagem: 'Erro ao consultar o banco.' });
+    }
+    if (rows.length === 0) {
+      return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+    }
+    return res.json(rows[0]);
   });
 });
 
@@ -111,6 +157,7 @@ app.get('/contatos', pagina('contatos.html'));
 app.get('/cart', pagina('carrinho.html'));
 app.get('/produtos', pagina('produtos.html'));
 app.get('/login', pagina('login.html'));
+app.get('/perfil', pagina('perfil.html'));
 app.get('/admin', pagina('admin.html'));
 
 // Todos os produtos: /nome-do-produto -> pages/allproducts/nome-do-produto.html

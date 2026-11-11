@@ -1,0 +1,140 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7f9;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0b318f, #031548);
+}
+
+.perfil-header {
+  display: flex;          /* Coloca a imagem e o nome lado a lado */
+  align-items: center;    /* Centraliza verticalmente o nome com a imagem */
+  gap: 16px;              /* Espaço entre a imagem e o texto */
+  width: 100%;
+  margin-bottom: 24px;    /* Afasta o cabeçalho dos dados abaixo */
+}
+
+.perfil-main {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.perfil-card {
+  background-color: transparent;
+  color: #ffffff;
+  padding: 14px 24px;
+  border: 1px solid #ffffff;
+  width: 100%;
+  max-width: 380px;
+  padding: 32px 24px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  text-align: left;
+}
+
+.profile-pic {
+  width: 110px;
+  height: 110px;
+  margin-bottom: 16px;
+}
+
+.perfil-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #3b82f6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: left;
+  align-items: left;
+}
+
+.perfil-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  font-size: 2.5rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+#perfil-nome {
+  font-size: 1.4rem;
+  color: #ffffff;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.perfil-dados {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.perfil-dados .login {
+  background-color: transparent;
+  border: 1px solid #e2e8f0;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  row-gap: 12px;
+  column-gap: 16px;
+  text-align: left;
+}
+
+.perfil-dados dt {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.perfil-dados dd {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: right;
+  word-break: break-word;
+}
+
+.perfil-msg {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-bottom: 16px;
+  min-height: 20px;
+}
+
+.perfil-sair {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #dc2626;
+  font-size: 0.95rem;
+  font-weight: 600; 
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.perfil-sair:hover {
+  color: #ffffff;
+}
+
+.perfil-sair:active {
+  transform: scale(0.98);
+}

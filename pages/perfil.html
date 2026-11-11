@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - HDS Automação</title>
+  <link rel="stylesheet" href="/css/perfil.css">
+  <link rel="icon" type="image/x-icon" href="/images/profilefinalv.png?v=2">
+  <script>
+    // Sem token = não está logado: vai direto para o login
+    if (!localStorage.getItem("token")) {
+      window.location.replace("/login");
+    }
+  </script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+  <script src="/js/header.js"></script>
+
+<main class="perfil-main">
+  <section class="perfil-card">
+
+      <div class="perfil-avatar" id="avatar">?</div>
+      <h1 id="perfil-nome">Carregando...</h1>
+
+    <dl class="perfil-dados">
+      <div class="login">
+        <dt>Login</dt>
+        <dd id="perfil-login">?</dd>
+
+        <dt>Tipo de conta</dt>
+        <dd id="perfil-tipo">?</dd>
+      </div>
+    </dl>
+
+    <p id="perfil-msg" class="perfil-msg"></p>
+    <button type="button" id="btn-sair" class="perfil-sair">Desconectar da Conta</button>
+  </section>
+</main>
+
+  <!-- rodapé -->
+  <div id="footer-placeholder"></div>
+  <script src="/js/footer.js"></script>
+  <script src="/js/perfil.js"></script>
+</body>
+</html>
