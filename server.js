@@ -176,3 +176,97 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+
+// ------------------------------------------------------------------
+//                     A P I   D O   C A R R I N H O
+// ------------------------------------------------------------------
+
+// Listar itens do carrinho da conta logada
+app.get('/api/carrinho', autenticar, (req, res) => {
+  const sql = `
+    SELECT produto_id, nome, preco, imagem, quantidade
+    FROM carrinho
+    WHERE usuario_login = ?
+    ORDER BY criado_em DESC
+  `;
+
+  db.query(sql, [req.login], (err, rows) => {
+    if (err) {
+      console.error('Erro ao buscar carrinho:', err);
+      return res.status(500).json({ mensagem: 'Erro ao carregar o carrinho.' });
+    }
+    return res.json(rows);
+  });
+});
+
+// Adicionar item (ou somar quantidade se já existir na conta)
+app.post('/api/carrinho', autenticar, (req, res) => {
+  const { produto_id, nome, preco, imagem, quantidade } = req.body;
+  const qtd = Math.max(1, parseInt(quantidade, 10) || 1);
+
+  if (!produto_id || !nome || preco === undefined) {
+    return res.status(400).json({ mensagem: 'Dados do produto incompletos.' });
+  }
+
+  const sql = `
+    INSERT INTO carrinho (usuario_login, produto_id, nome, preco, imagem, quantidade)
+    VALUES (?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      quantidade = quantidade + VALUES(quantidade),
+      nome = VALUES(nome),
+      preco = VALUES(preco),
+      imagem = COALESCE(VALUES(imagem), imagem)
+  `;
+
+  db.query(
+    sql,
+    [req.login, String(produto_id), nome, Number(preco), imagem || '/images/PLACEHOLDER.png', qtd],
+    (err) => {
+      if (err) {
+        console.error('Erro ao adicionar ao carrinho:', err);
+        return res.status(500).json({ mensagem: 'Erro ao salvar item no carrinho.' });
+      }
+      return res.status(201).json({ mensagem: 'Produto adicionado ao carrinho!' });
+    }
+  );
+});
+
+// Alterar quantidade (+ ou -)
+app.put('/api/carrinho/:produtoId', autenticar, (req, res) => {
+  const { produtoId } = req.params;
+  const quantidade = parseInt(req.body.quantidade, 10);
+
+  if (Number.isNaN(quantidade) || quantidade <= 0) {
+    const sqlDelete = 'DELETE FROM carrinho WHERE usuario_login = ? AND produto_id = ?';
+    return db.query(sqlDelete, [req.login, produtoId], (err) => {
+      if (err) {
+        console.error('Erro ao remover item:', err);
+        return res.status(500).json({ mensagem: 'Erro ao atualizar carrinho.' });
+      }
+      return res.json({ mensagem: 'Item removido.' });
+    });
+  }
+
+  const sqlUpdate = 'UPDATE carrinho SET quantidade = ? WHERE usuario_login = ? AND produto_id = ?';
+  db.query(sqlUpdate, [quantidade, req.login, produtoId], (err) => {
+    if (err) {
+      console.error('Erro ao atualizar quantidade:', err);
+      return res.status(500).json({ mensagem: 'Erro ao atualizar quantidade.' });
+    }
+    return res.json({ mensagem: 'Quantidade atualizada.' });
+  });
+});
+
+// Remover item específico
+app.delete('/api/carrinho/:produtoId', autenticar, (req, res) => {
+  const { produtoId } = req.params;
+  const sql = 'DELETE FROM carrinho WHERE usuario_login = ? AND produto_id = ?';
+
+  db.query(sql, [req.login, produtoId], (err) => {
+    if (err) {
+      console.error('Erro ao excluir item do carrinho:', err);
+      return res.status(500).json({ mensagem: 'Erro ao remover item.' });
+    }
+    return res.json({ mensagem: 'Item removido com sucesso.' });
+  });
+});
