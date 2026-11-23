@@ -2,9 +2,17 @@ const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 3000;
+
+// Chave usada para assinar os tokens de login.
+// Em produção, defina a variável de ambiente JWT_SECRET com um valor longo e aleatório.
+const JWT_SECRET = process.env.JWT_SECRET || 'troque-esta-chave-em-desenvolvimento';
+if (!process.env.JWT_SECRET) {
+  console.warn('AVISO: JWT_SECRET não definido. Usando chave de desenvolvimento.');
+}
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -87,8 +95,12 @@ app.post('/api/login', (req, res) => {
         return res.status(401).json({ mensagem: 'Login ou senha incorretos!' });
       }
 
+      // Token que prova quem está logado (vale por 2 horas)
+      const token = jwt.sign({ login: usuario.login }, JWT_SECRET, { expiresIn: '2h' });
+
       return res.json({
         mensagem: 'Login realizado com sucesso!',
+        token,
         usuario: { nome: usuario.nome, login: usuario.login, perfil: usuario.perfil }
       });
     } catch (erro) {
@@ -98,6 +110,147 @@ app.post('/api/login', (req, res) => {
   });
 });
 
+// Middleware: só deixa passar quem enviou um token válido
+function autenticar(req, res, next) {
+  const cabecalho = req.headers.authorization || '';
+  const token = cabecalho.startsWith('Bearer ') ? cabecalho.slice(7) : null;
+
+  if (!token) {
+    return res.status(401).json({ mensagem: 'Não autenticado.' });
+  }
+
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    req.login = payload.login; // quem está logado, definido pelo servidor
+    next();
+  } catch (erro) {
+    return res.status(401).json({ mensagem: 'Sessão inválida ou expirada.' });
+  }
+}
+
+// Perfil da conta logada (o servidor descobre quem é pelo token, nunca pela URL)
+app.get('/api/me', autenticar, (req, res) => {
+  const sql = 'SELECT nome, login, perfil FROM usuarios WHERE login = ?';
+
+  db.query(sql, [req.login], (err, rows) => {
+    if (err) {
+      console.error('Erro na query de perfil:', err);
+      return res.status(500).json({ mensagem: 'Erro ao consultar o banco.' });
+    }
+    if (rows.length === 0) {
+      return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+    }
+    return res.json(rows[0]);
+  });
+});
+
+// ------------------------------------------------------------------
+//                     A P I   D O   C A R R I N H O
+// ------------------------------------------------------------------
+
+// Listar itens do carrinho da conta logada
+app.get('/api/carrinho', autenticar, (req, res) => {
+  const sql = `
+    SELECT produto_id, nome, preco, imagem, quantidade
+    FROM carrinho
+    WHERE usuario_login = ?
+    ORDER BY criado_em DESC
+  `;
+
+  db.query(sql, [req.login], (err, rows) => {
+    if (err) {
+      console.error('Erro ao buscar carrinho:', err);
+      return res.status(500).json({ mensagem: 'Erro ao carregar o carrinho.' });
+    }
+    return res.json(rows);
+  });
+});
+
+// Adicionar item (ou somar quantidade se já existir na conta)
+app.post('/api/carrinho', autenticar, (req, res) => {
+  const { produto_id, nome, preco, imagem, quantidade } = req.body;
+  const qtd = Math.max(1, parseInt(quantidade, 10) || 1);
+
+  if (!produto_id || !nome || preco === undefined) {
+    return res.status(400).json({ mensagem: 'Dados do produto incompletos.' });
+  }
+
+  const sql = `
+    INSERT INTO carrinho (usuario_login, produto_id, nome, preco, imagem, quantidade)
+    VALUES (?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      quantidade = quantidade + VALUES(quantidade),
+      nome = VALUES(nome),
+      preco = VALUES(preco),
+      imagem = COALESCE(VALUES(imagem), imagem)
+  `;
+
+  db.query(
+    sql,
+    [req.login, String(produto_id), nome, Number(preco), imagem || '/images/PLACEHOLDER.png', qtd],
+    (err) => {
+      if (err) {
+        console.error('Erro ao adicionar ao carrinho:', err);
+        return res.status(500).json({ mensagem: 'Erro ao salvar item no carrinho.' });
+      }
+      return res.status(201).json({ mensagem: 'Produto adicionado ao carrinho!' });
+    }
+  );
+});
+
+// Alterar quantidade (+ ou -)
+app.put('/api/carrinho/:produtoId', autenticar, (req, res) => {
+  const { produtoId } = req.params;
+  const quantidade = parseInt(req.body.quantidade, 10);
+
+  if (Number.isNaN(quantidade)) {
+    return res.status(400).json({ mensagem: 'Quantidade inválida.' });
+  }
+
+  if (quantidade <= 0) {
+    const sqlDelete = 'DELETE FROM carrinho WHERE usuario_login = ? AND produto_id = ?';
+    db.query(sqlDelete, [req.login, produtoId], (err) => {
+      if (err) {
+        console.error('Erro ao remover item:', err);
+        return res.status(500).json({ mensagem: 'Erro ao atualizar carrinho.' });
+      }
+      return res.json({ mensagem: 'Item removido.' });
+    });
+    return;
+  }
+
+  const sqlUpdate = 'UPDATE carrinho SET quantidade = ? WHERE usuario_login = ? AND produto_id = ?';
+  db.query(sqlUpdate, [quantidade, req.login, produtoId], (err) => {
+    if (err) {
+      console.error('Erro ao atualizar quantidade:', err);
+      return res.status(500).json({ mensagem: 'Erro ao atualizar quantidade.' });
+    }
+    return res.json({ mensagem: 'Quantidade atualizada.' });
+  });
+});
+
+// Remover item específico
+app.delete('/api/carrinho/:produtoId', autenticar, (req, res) => {
+  const { produtoId } = req.params;
+  const sql = 'DELETE FROM carrinho WHERE usuario_login = ? AND produto_id = ?';
+
+  db.query(sql, [req.login, produtoId], (err) => {
+    if (err) {
+      console.error('Erro ao excluir item do carrinho:', err);
+      return res.status(500).json({ mensagem: 'Erro ao remover item.' });
+    }
+    return res.json({ mensagem: 'Item removido com sucesso.' });
+  });
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Erro não capturado no Node:', err);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('Promise rejeitada sem catch:', err);
+});
+  
 // ------------------------------------------------------------------
 //                          P Á G I N A S
 // ------------------------------------------------------------------
@@ -111,6 +264,7 @@ app.get('/contatos', pagina('contatos.html'));
 app.get('/cart', pagina('carrinho.html'));
 app.get('/produtos', pagina('produtos.html'));
 app.get('/login', pagina('login.html'));
+app.get('/perfil', pagina('perfil.html'));
 app.get('/admin', pagina('admin.html'));
 
 // Todos os produtos: /nome-do-produto -> pages/allproducts/nome-do-produto.html
