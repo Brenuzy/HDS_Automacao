@@ -145,39 +145,6 @@ app.get('/api/me', autenticar, (req, res) => {
 });
 
 // ------------------------------------------------------------------
-//                          P Á G I N A S
-// ------------------------------------------------------------------
-const pagina = (arquivo) => (req, res) =>
-  res.sendFile(path.join(__dirname, 'pages', arquivo));
-
-app.get('/', pagina('paginainicial.html'));
-app.get('/sobre', pagina('sobre.html'));
-app.get('/solucoes', pagina('solucoes.html'));
-app.get('/contatos', pagina('contatos.html'));
-app.get('/cart', pagina('carrinho.html'));
-app.get('/produtos', pagina('produtos.html'));
-app.get('/login', pagina('login.html'));
-app.get('/perfil', pagina('perfil.html'));
-app.get('/admin', pagina('admin.html'));
-
-// Todos os produtos: /nome-do-produto -> pages/allproducts/nome-do-produto.html
-app.get('/:id', (req, res, next) => {
-  const id = path.basename(req.params.id); // evita "../" na URL
-  res.sendFile(path.join(__dirname, 'pages', 'allproducts', `${id}.html`), (err) => {
-    if (err) next(); // não achou o arquivo: cai no 404 abaixo
-  });
-});
-
-// Rota não encontrada
-app.use((req, res) => {
-  res.status(404).send('<h1>Página não encontrada!</h1>');
-});
-
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
-
-// ------------------------------------------------------------------
 //                     A P I   D O   C A R R I N H O
 // ------------------------------------------------------------------
 
@@ -236,15 +203,20 @@ app.put('/api/carrinho/:produtoId', autenticar, (req, res) => {
   const { produtoId } = req.params;
   const quantidade = parseInt(req.body.quantidade, 10);
 
-  if (Number.isNaN(quantidade) || quantidade <= 0) {
+  if (Number.isNaN(quantidade)) {
+    return res.status(400).json({ mensagem: 'Quantidade inválida.' });
+  }
+
+  if (quantidade <= 0) {
     const sqlDelete = 'DELETE FROM carrinho WHERE usuario_login = ? AND produto_id = ?';
-    return db.query(sqlDelete, [req.login, produtoId], (err) => {
+    db.query(sqlDelete, [req.login, produtoId], (err) => {
       if (err) {
         console.error('Erro ao remover item:', err);
         return res.status(500).json({ mensagem: 'Erro ao atualizar carrinho.' });
       }
       return res.json({ mensagem: 'Item removido.' });
     });
+    return;
   }
 
   const sqlUpdate = 'UPDATE carrinho SET quantidade = ? WHERE usuario_login = ? AND produto_id = ?';
@@ -269,4 +241,45 @@ app.delete('/api/carrinho/:produtoId', autenticar, (req, res) => {
     }
     return res.json({ mensagem: 'Item removido com sucesso.' });
   });
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Erro não capturado no Node:', err);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('Promise rejeitada sem catch:', err);
+});
+  
+// ------------------------------------------------------------------
+//                          P Á G I N A S
+// ------------------------------------------------------------------
+const pagina = (arquivo) => (req, res) =>
+  res.sendFile(path.join(__dirname, 'pages', arquivo));
+
+app.get('/', pagina('paginainicial.html'));
+app.get('/sobre', pagina('sobre.html'));
+app.get('/solucoes', pagina('solucoes.html'));
+app.get('/contatos', pagina('contatos.html'));
+app.get('/cart', pagina('carrinho.html'));
+app.get('/produtos', pagina('produtos.html'));
+app.get('/login', pagina('login.html'));
+app.get('/perfil', pagina('perfil.html'));
+app.get('/admin', pagina('admin.html'));
+
+// Todos os produtos: /nome-do-produto -> pages/allproducts/nome-do-produto.html
+app.get('/:id', (req, res, next) => {
+  const id = path.basename(req.params.id); // evita "../" na URL
+  res.sendFile(path.join(__dirname, 'pages', 'allproducts', `${id}.html`), (err) => {
+    if (err) next(); // não achou o arquivo: cai no 404 abaixo
+  });
+});
+
+// Rota não encontrada
+app.use((req, res) => {
+  res.status(404).send('<h1>Página não encontrada!</h1>');
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
