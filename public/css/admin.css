@@ -1,0 +1,17 @@
+* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { margin: 0; min-height: 100vh; color: #fff; background: linear-gradient(135deg, #0b318f, #031548); }
+.admin-main { max-width: 900px; margin: 0 auto; padding: 48px 20px; min-height: calc(100vh - 200px); }
+.admin-main h1 { margin: 0 0 8px; font-size: 1.8rem; }
+.admin-resumo { margin: 0 0 24px; opacity: .8; }
+.admin-lista { display: flex; flex-direction: column; gap: 16px; }
+.pedido { padding: 20px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.25); border-left: 4px solid #f5b942; border-radius: 10px; }
+.pedido.status-pago { border-left-color: #4cd37b; }
+.pedido.status-enviado { border-left-color: #00a8ff; }
+.pedido.status-cancelado { border-left-color: #ff6b6b; opacity: .7; }
+.pedido-topo, .pedido-base, .pedido-itens li { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pedido-topo span { opacity: .7; font-size: .85rem; }
+.pedido-dados p { margin: 4px 0; font-size: .92rem; }
+.pedido-itens { margin: 12px 0; padding: 0; list-style: none; }
+.pedido-itens li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.12); }
+.pedido-base strong { font-size: 1.1rem; }
+.pedido-status { padding: 8px 10px; font-size: .95rem; color: #fff; background: #06184c; border: 1px solid rgba(255,255,255,.5); border-radius: 6px; }

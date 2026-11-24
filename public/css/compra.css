@@ -1,0 +1,27 @@
+* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { margin: 0; min-height: 100vh; color: #fff; background: linear-gradient(135deg, #0b318f, #031548); }
+.compra-main { max-width: 1000px; margin: 0 auto; padding: 48px 20px; min-height: calc(100vh - 200px); }
+.compra-main h1 { margin: 0 0 24px; font-size: 1.8rem; }
+.compra-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: start; }
+.compra-grid[hidden], .compra-card[hidden] { display: none; }
+.compra-card { padding: 28px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.25); border-radius: 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.compra-card h2 { margin: 0 0 16px; font-size: 1.15rem; }
+.compra-card h2:not(:first-child) { margin-top: 28px; }
+.compra-card label { display: block; margin-bottom: 14px; font-size: .85rem; opacity: .9; }
+.compra-card input[type=text] { display: block; width: 100%; margin-top: 6px; padding: 11px 12px; font-size: 1rem; color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.4); border-radius: 6px; outline: none; }
+.compra-card input[type=text]:focus { border-color: #00a8ff; box-shadow: 0 0 8px rgba(0,168,255,.6); }
+.compra-linha { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+.compra-radio { display: flex !important; align-items: center; gap: 10px; padding: 12px; font-size: 1rem !important; opacity: 1 !important; border: 1px solid rgba(255,255,255,.3); border-radius: 6px; cursor: pointer; }
+.compra-radio:has(input:checked) { border-color: #00a8ff; background: rgba(0,168,255,.12); }
+.compra-msg { min-height: 1.2em; margin: 12px 0; color: #ff9b9b; font-size: .9rem; }
+.compra-btn { display: block; width: 100%; padding: 14px; font-size: 1rem; font-weight: 700; text-align: center; text-decoration: none; color: #06184c; background: #fff; border: 1px solid #fff; cursor: pointer; transition: box-shadow .2s; }
+.compra-btn:hover { box-shadow: 0 0 14px rgba(0,168,255,.8); }
+.compra-btn:disabled { opacity: .6; cursor: wait; }
+.compra-resumo { margin: 0 0 16px; padding: 0; list-style: none; }
+.compra-resumo li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.15); }
+.compra-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 1.1rem; }
+.compra-total strong { font-size: 1.4rem; }
+.compra-link { padding: 0; color: #fff; background: none; border: none; text-decoration: underline; opacity: .8; cursor: pointer; }
+.compra-centro { max-width: 560px; margin: 0 auto; text-align: center; }
+.compra-centro .compra-btn { margin-top: 18px; }
+@media (max-width: 760px) { .compra-grid { grid-template-columns: 1fr; } }

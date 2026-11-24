@@ -2,139 +2,96 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f7f9;
   min-height: 100vh;
-  background: linear-gradient(180deg, #0b318f, #031548);
-}
-
-.perfil-header {
-  display: flex;          /* Coloca a imagem e o nome lado a lado */
-  align-items: center;    /* Centraliza verticalmente o nome com a imagem */
-  gap: 16px;              /* Espaço entre a imagem e o texto */
-  width: 100%;
-  margin-bottom: 24px;    /* Afasta o cabeçalho dos dados abaixo */
+  color: #ffffff;
+  background: linear-gradient(135deg, #0b318f, #031548);
 }
 
 .perfil-main {
-  min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 60px 20px;
+  min-height: calc(100vh - 200px);
 }
 
 .perfil-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 40px 32px;
+  text-align: center;
   background-color: transparent;
-  color: #ffffff;
-  padding: 14px 24px;
-  border: 1px solid #ffffff;
-  width: 100%;
-  max-width: 380px;
-  padding: 32px 24px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  text-align: left;
-}
-
-.profile-pic {
-  width: 110px;
-  height: 110px;
-  margin-bottom: 16px;
-}
-
-.perfil-avatar-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #3b82f6;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: left;
-  align-items: left;
+  border: 2px solid rgba(255, 255, 255);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .perfil-avatar {
-  width: 110px;
-  height: 110px;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 16px;
   border-radius: 50%;
-  background-color: #dbeafe;
-  color: #1d4ed8;
-  font-size: 2.5rem;
-  font-weight: 700;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 16px;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 2px solid #ffffff;
 }
 
-#perfil-nome {
-  font-size: 1.4rem;
-  color: #ffffff;
-  font-weight: 700;
-  margin-bottom: 20px;
+.perfil-card h1 {
+  font-size: 1.6rem;
+  margin-bottom: 28px;
 }
 
 .perfil-dados {
-  width: 100%;
-  margin-bottom: 16px;
+  text-align: left;
+  margin-bottom: 24px;
 }
 
-.perfil-dados .login {
-  background-color: transparent;
-  border: 1px solid #e2e8f0;
-  padding: 16px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  row-gap: 12px;
-  column-gap: 16px;
-  text-align: left;
+.perfil-dados div {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .perfil-dados dt {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #ffffff;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  margin-bottom: 4px;
 }
 
 .perfil-dados dd {
-  font-size: 0.875rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  color: #ffffff;
-  text-align: right;
-  word-break: break-word;
 }
 
 .perfil-msg {
-  font-size: 0.875rem;
-  color: #ef4444;
-  margin-bottom: 16px;
-  min-height: 20px;
+  min-height: 1.2em;
+  margin-bottom: 12px;
+  color: #ff9b9b;
+  font-size: 0.9rem;
 }
 
 .perfil-sair {
   width: 100%;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
   background-color: transparent;
-  color: #dc2626;
-  font-size: 0.95rem;
-  font-weight: 600; 
+  border: 2px solid #ffffff;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .perfil-sair:hover {
-  color: #ffffff;
-}
-
-.perfil-sair:active {
-  transform: scale(0.98);
+  color: #000000;
+  background-color: #ffffff;
 }

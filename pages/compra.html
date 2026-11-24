@@ -1,20 +1,532 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment - HDS Automação</title>
   <link rel="stylesheet" href="/css/paginainicial.css">
   <script src="/js/paginainicial.js"></script>
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
   <link rel="icon" type="image/x-icon" href="/images/profilefinalv.png?v=2">
+  <style>
+    .compra-main {
+      max-width: 820px;
+      margin: 40px auto;
+      padding: 28px;
+      background: #0b205c;
+      color: #ffffff;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    .compra-header {
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .compra-header h1 {
+      margin: 0 0 6px 0;
+      font-size: 26px;
+    }
+    .compra-header p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+    .compra-itens {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px 0;
+    }
+    .compra-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .compra-item:last-child {
+      border-bottom: none;
+    }
+    .compra-item-esq {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .compra-item-esq img {
+      width: 54px;
+      height: 54px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #06143d;
+      flex-shrink: 0;
+    }
+    .compra-item-nome {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .compra-item-qtd {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+    .compra-item-preco {
+      font-weight: 700;
+      color: #7dd3fc;
+      white-space: nowrap;
+    }
+    .compra-resumo-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      margin-bottom: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      font-size: 18px;
+    }
+    .compra-resumo-total strong {
+      font-size: 22px;
+      color: #38bdf8;
+    }
+    .compra-secao {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      background: rgba(6, 20, 61, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .compra-secao h2 {
+      margin: 0 0 14px 0;
+      font-size: 18px;
+    }
+    .campo-grupo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .campo-grupo.full {
+      grid-template-columns: 1fr;
+    }
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .campo label {
+      font-size: 13px;
+      color: #cbd5e1;
+      font-weight: 700;
+    }
+    .campo input,
+    .campo select {
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #06143d;
+      color: #ffffff;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .btn-pagar-padrao {
+      width: 100%;
+      margin-top: 14px;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 6px;
+      background: #009ee3;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-pagar-padrao:hover {
+      background: #0086cc;
+    }
+    .aviso-mp {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #fbbf24;
+    }
+    .compra-vazio {
+      text-align: center;
+      padding: 24px 0;
+    }
+    .compra-btn-link {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 11px 20px;
+      border: 1px solid #ffffff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .comprovante-box {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(125, 211, 252, 0.35);
+    }
+    .pix-area {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(6, 20, 61, 0.75);
+      border-radius: 8px;
+      text-align: center;
+    }
+    .pix-area img {
+      max-width: 220px;
+      margin: 12px auto;
+      display: block;
+    }
+    .pix-copia {
+      word-break: break-all;
+      font-size: 12px;
+      padding: 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    @media (max-width: 640px) {
+      .campo-grupo {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-    
   <div id="header-placeholder"></div>
-  <script src="/js/header.js"></script> 
+  <script src="/js/header.js"></script>
+
+  <main class="compra-main">
+    <div class="compra-header">
+      <h1>Finalizar Compra</h1>
+      <p id="compra-subtitulo">A verificar os itens do carrinho...</p>
+    </div>
+
+    <ul class="compra-itens" id="compra-lista-itens"></ul>
+
+    <div class="compra-resumo-total" id="compra-bloco-total" style="display: none;">
+      <span>Total do Pedido</span>
+      <strong id="compra-total">R$ 0,00</strong>
+    </div>
+
+    <div id="area-checkout" style="display: none;">
+      <section class="compra-secao">
+        <h2>Dados do Cliente e Entrega</h2>
+        <div class="campo-grupo">
+          <div class="campo">
+            <label for="cliente-nome">Nome completo / Utilizador</label>
+            <input type="text" id="cliente-nome" placeholder="O teu nome completo" required>
+          </div>
+          <div class="campo">
+            <label for="cliente-email">E-mail</label>
+            <input type="email" id="cliente-email" placeholder="teu@email.com" required>
+          </div>
+        </div>
+
+        <div class="campo-grupo">
+          <div class="campo">
+            <label for="cliente-cep">CEP</label>
+            <input type="text" id="cliente-cep" placeholder="00000-000" required>
+          </div>
+          <div class="campo">
+            <label for="cliente-cidade">Cidade / UF</label>
+            <input type="text" id="cliente-cidade" placeholder="Curitiba - PR" required>
+          </div>
+        </div>
+
+        <div class="campo-grupo">
+          <div class="campo">
+            <label for="cliente-endereco">Endereço (Rua / Av.)</label>
+            <input type="text" id="cliente-endereco" placeholder="Rua das Flores" required>
+          </div>
+          <div class="campo">
+            <label for="cliente-numero">Número / Complemento</label>
+            <input type="text" id="cliente-numero" placeholder="123, Galpão 2" required>
+          </div>
+        </div>
+      </section>
+
+      <section class="compra-secao">
+        <h2>Método de Pagamento (Mercado Pago)</h2>
+        <div id="paymentBrick_container"></div>
+
+        <div id="pagamento-padrao-box">
+          <div class="campo-grupo full">
+            <div class="campo">
+              <label for="metodo-pagamento-select">Escolhe o método de pagamento</label>
+              <select id="metodo-pagamento-select">
+                <option value="pix">Pix</option>
+                <option value="credit_card">Cartão de Crédito</option>
+                <option value="debit_card">Cartão de Débito</option>
+                <option value="bolbradesco">Boleto Bancário</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="btn-pagar-padrao" id="btn-confirmar-pagamento">
+            Pagar agora
+          </button>
+          <p class="aviso-mp" id="aviso-mp-status"></p>
+        </div>
+      </section>
+    </div>
+
+    <div id="compra-confirmacao"></div>
+  </main>
+
+  <script>
+    (async function inicializarPagamento() {
+      function obterTokenValido() {
+        const t = localStorage.getItem("token");
+        if (!t || t === "null" || t === "undefined" || !t.trim()) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("usuario");
+          window.location.replace("/login");
+          return null;
+        }
+        return t.trim();
+      }
+
+      const token = obterTokenValido();
+      if (!token) return;
+
+      function criarHeaders() {
+        const currentToken = obterTokenValido();
+        if (!currentToken) return null;
+        return {
+          "Authorization": `Bearer ${currentToken}`,
+          "Content-Type": "application/json"
+        };
+      }
+
+      function redirecionarSessaoExpirada() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        window.location.replace("/login");
+      }
+
+      const subtituloEl = document.getElementById("compra-subtitulo");
+      const listaEl = document.getElementById("compra-lista-itens");
+      const blocoTotalEl = document.getElementById("compra-bloco-total");
+      const totalEl = document.getElementById("compra-total");
+      const areaCheckoutEl = document.getElementById("area-checkout");
+      const confirmacaoEl = document.getElementById("compra-confirmacao");
+      const avisoMpEl = document.getElementById("aviso-mp-status");
+
+      function formatarBRL(valor) {
+        return Number(valor || 0).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        });
+      }
+
+      function obterDadosCliente() {
+        const nome = document.getElementById("cliente-nome").value.trim();
+        const email = document.getElementById("cliente-email").value.trim();
+        const cep = document.getElementById("cliente-cep").value.trim();
+        const cidade = document.getElementById("cliente-cidade").value.trim();
+        const endereco = document.getElementById("cliente-endereco").value.trim();
+        const numero = document.getElementById("cliente-numero").value.trim();
+
+        if (!nome || !email || !cep || !cidade || !endereco || !numero) {
+          alert("Preenche o nome, o e-mail e o endereço completo para continuar.");
+          return null;
+        }
+
+        return {
+          nome,
+          email,
+          endereco: `${endereco}, ${numero} - ${cidade} (CEP: ${cep})`
+        };
+      }
+
+      async function enviarPagamento(payloadExtra) {
+        const headers = criarHeaders();
+        if (!headers) return;
+
+        const cliente = obterDadosCliente();
+        if (!cliente) return;
+
+        const bodyEnvio = {
+          ...payloadExtra,
+          cliente_nome: cliente.nome,
+          endereco_entrega: cliente.endereco,
+          payer: {
+            ...(payloadExtra.payer || {}),
+            email: (payloadExtra.payer && payloadExtra.payer.email) || cliente.email
+          }
+        };
+
+        const res = await fetch("/api/pagamento/processar", {
+          method: "POST",
+          headers,
+          body: JSON.stringify(bodyEnvio)
+        });
+
+        if (res.status === 401) {
+          redirecionarSessaoExpirada();
+          return;
+        }
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          alert(data.mensagem || "Não foi possível concluir o pagamento.");
+          throw new Error(data.mensagem || "Erro no pagamento");
+        }
+
+        areaCheckoutEl.style.display = "none";
+        listaEl.innerHTML = "";
+        blocoTotalEl.style.display = "none";
+        subtituloEl.textContent = "Pedido registado com sucesso!";
+
+        if (typeof carregarCarrinho === "function") {
+          carregarCarrinho();
+        }
+
+        let detalhePagamentoHtml = "";
+        if (data.qr_code_base64) {
+          detalhePagamentoHtml = `
+            <div class="pix-area">
+              <h3>Pagamento via Pix</h3>
+              <img src="data:image/png;base64,${data.qr_code_base64}" alt="QR Code Pix">
+              <div class="pix-copia">${data.qr_code || ""}</div>
+            </div>
+          `;
+        } else if (data.ticket_url) {
+          detalhePagamentoHtml = `
+            <p><a href="${data.ticket_url}" target="_blank" class="compra-btn-link">Ver Talão / Boleto</a></p>
+          `;
+        }
+
+        confirmacaoEl.innerHTML = `
+          <div class="comprovante-box">
+            <h2>Compra Finalizada — Pedido #${data.pedido_id}</h2>
+            <p><strong>Cliente:</strong> ${cliente.nome} (${cliente.email})</p>
+            <p><strong>Endereço:</strong> ${cliente.endereco}</p>
+            <p><strong>Estado do pagamento:</strong> ${data.status}</p>
+            <p><strong>Método:</strong> ${data.metodo_pagamento || "-"}</p>
+            <p><strong>ID Mercado Pago:</strong> ${data.mp_payment_id}</p>
+            <p><strong>Valor Total:</strong> ${formatarBRL(data.valor_total)}</p>
+            ${detalhePagamentoHtml}
+            <a href="/produtos" class="compra-btn-link">Voltar ao Catálogo</a>
+          </div>
+        `;
+      }
+
+      try {
+        const usuarioSalvo = JSON.parse(localStorage.getItem("usuario") || "null");
+        if (usuarioSalvo && usuarioSalvo.nome) {
+          document.getElementById("cliente-nome").value = usuarioSalvo.nome;
+        }
+
+        const headers = criarHeaders();
+        if (!headers) return;
+
+        const resp = await fetch("/api/carrinho", { headers });
+        if (resp.status === 401) {
+          redirecionarSessaoExpirada();
+          return;
+        }
+
+        const itens = await resp.json().catch(() => []);
+        if (!Array.isArray(itens) || itens.length === 0) {
+          subtituloEl.textContent = "O teu carrinho está vazio.";
+          listaEl.innerHTML = `
+            <div class="compra-vazio">
+              <p>Adiciona produtos antes de avançar para o pagamento.</p>
+              <a href="/produtos" class="compra-btn-link">Ir para Produtos</a>
+            </div>
+          `;
+          return;
+        }
+
+        const valorTotal = Number(
+          itens.reduce((acc, item) => acc + Number(item.preco || 0) * Number(item.quantidade || 1), 0).toFixed(2)
+        );
+
+        subtituloEl.textContent = "Confere os itens abaixo e escolhe a forma de pagamento:";
+        listaEl.innerHTML = itens
+          .map((item) => {
+            const qtd = Number(item.quantidade || 1);
+            const subtotalItem = Number(item.preco || 0) * qtd;
+            const img = item.imagem || "/images/PLACEHOLDER.png";
+            return `
+              <li class="compra-item">
+                <div class="compra-item-esq">
+                  <img src="${img}" alt="${item.nome}" onerror="this.src='/images/PLACEHOLDER.png'">
+                  <div>
+                    <div class="compra-item-nome">${item.nome}</div>
+                    <div class="compra-item-qtd">Unitário: ${formatarBRL(item.preco)} • Qtd: ${qtd}</div>
+                  </div>
+                </div>
+                <div class="compra-item-preco">${formatarBRL(subtotalItem)}</div>
+              </li>
+            `;
+          })
+          .join("");
+
+        totalEl.textContent = formatarBRL(valorTotal);
+        blocoTotalEl.style.display = "flex";
+        areaCheckoutEl.style.display = "block";
+
+        document.getElementById("btn-confirmar-pagamento").addEventListener("click", async () => {
+          const metodoSelecionado = document.getElementById("metodo-pagamento-select").value;
+          await enviarPagamento({
+            payment_method_id: metodoSelecionado
+          });
+        });
+
+        const PUBLIC_KEY = "SUA_PUBLIC_KEY_AQUI";
+        if (typeof MercadoPago !== "undefined" && PUBLIC_KEY && !PUBLIC_KEY.startsWith("SUA_")) {
+          const mp = new MercadoPago(PUBLIC_KEY, { locale: "pt-BR" });
+          const bricksBuilder = mp.bricks();
+
+          await bricksBuilder.create("payment", "paymentBrick_container", {
+            initialization: { amount: valorTotal },
+            customization: {
+              visual: { style: { theme: "dark" } },
+              paymentMethods: {
+                creditCard: "all",
+                debitCard: "all",
+                ticket: "all",
+                bankTransfer: "all",
+                maxInstallments: 12
+              }
+            },
+            callbacks: {
+              onReady: () => {
+                document.getElementById("pagamento-padrao-box").style.display = "none";
+              },
+              onSubmit: ({ formData }) => {
+                return new Promise((resolve, reject) => {
+                  enviarPagamento(formData).then(resolve).catch(reject);
+                });
+              },
+              onError: (err) => {
+                console.error("Erro no Payment Brick:", err);
+                avisoMpEl.textContent = "Checkout externo indisponível de momento; usa a opção acima.";
+              }
+            }
+          });
+        } else {
+          avisoMpEl.textContent = "Configura a tua Public Key do Mercado Pago no compra.html para ativar o Brick completo.";
+        }
+      } catch (erro) {
+        console.error("Erro ao carregar checkout:", erro);
+        subtituloEl.textContent = "Erro ao carregar os dados de compra.";
+      }
+    })();
+  </script>
 
   <!-- rodapé -->
   <div id="footer-placeholder"></div>
-  <script src="/js/footer.js"></script> 
+  <script src="/js/footer.js"></script>
 </body>
 </html>

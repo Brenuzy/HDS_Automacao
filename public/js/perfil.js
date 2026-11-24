@@ -39,4 +39,4 @@
 
   document.getElementById("btn-sair").addEventListener("click", sair);
   carregarPerfil();
-})();   
+})();

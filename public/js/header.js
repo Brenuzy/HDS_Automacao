@@ -83,7 +83,7 @@
         <span>Subtotal</span>
         <strong id="cart-subtotal">R$ 0,00</strong>
       </div>
-      <a href="/cart" class="cart-checkout-btn">Finalizar Pedido</a>
+      <a href="/compra" class="cart-checkout-btn">Finalizar Compra</a>
     </div>
   </aside>
 
@@ -113,7 +113,6 @@
   box-sizing: border-box;
 }
 
-/* ================= LOGO E BOTÃO TOGGLE (= para X) ================= */
 .header-left {
   display: flex;
   align-items: center;
@@ -153,9 +152,6 @@
   transform: translateX(0);
 }
 
-.menu-toggle:hover {
-}
-
 .menu-toggle .bar {
   position: absolute;
   width: 18px;
@@ -193,7 +189,6 @@
   transform-origin: left center;
 }
 
-/* ================= NAVEGAÇÃO PRINCIPAL ================= */
 .main-nav {
   display: flex;
   align-items: center;
@@ -296,7 +291,6 @@
   border-radius: 16px;
 }
 
-/* ================= BARRA DE PESQUISA, PERFIL E CARRINHO ================= */
 .header-actions {
   display: flex;
   align-items: center;
@@ -388,11 +382,7 @@
 }
 
 .cart-button:hover {
-<<<<<<< HEAD
-  background-color: rgba(255, 255, 255, 0.08);
-=======
   background-color: rgba(255, 255, 255, 0.12);
->>>>>>> a22934eed7c4c39754ef2b6fa1204f0876faf4b8
 }
 
 .cart-button svg {
@@ -422,7 +412,6 @@
   box-sizing: border-box;
 }
 
-/* ================= ESTILOS DA GAVETA DO CARRINHO ================= */
 .cart-overlay {
   position: fixed;
   inset: 0;
@@ -1253,8 +1242,10 @@
 
     if (btnCarrinho) {
       btnCarrinho.addEventListener("click", (e) => {
-        e.preventDefault();
-        abrirCarrinho();
+        if (window.location.pathname !== "/cart") {
+          e.preventDefault();
+          abrirCarrinho();
+        }
       });
     }
 

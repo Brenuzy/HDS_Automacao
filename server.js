@@ -3,6 +3,7 @@ const path = require('path');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { MercadoPagoConfig, Payment } = require('mercadopago');
 
 const app = express();
 const PORT = 3000;
@@ -13,6 +14,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'troque-esta-chave-em-desenvolvimen
 if (!process.env.JWT_SECRET) {
   console.warn('AVISO: JWT_SECRET não definido. Usando chave de desenvolvimento.');
 }
+
+// Mercado Pago
+const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || 'SEU_ACCESS_TOKEN_AQUI';
+const mpClient = new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN });
+const mpPayment = new Payment(mpClient);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,6 +39,22 @@ db.connect((err) => {
     return;
   }
   console.log('Conectado ao banco BDHDS com sucesso!');
+
+  const sqlCriarPedidos = `
+    CREATE TABLE IF NOT EXISTS pedidos (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      usuario_login VARCHAR(100) NOT NULL,
+      mp_payment_id VARCHAR(100),
+      status_pagamento VARCHAR(50) NOT NULL,
+      metodo_pagamento VARCHAR(50),
+      valor_total DECIMAL(10, 2) NOT NULL,
+      itens_json LONGTEXT NOT NULL,
+      criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
+  db.query(sqlCriarPedidos, (errTab) => {
+    if (errTab) console.error('Erro ao verificar/criar tabela pedidos:', errTab.message);
+  });
 });
 
 // ------------------------------------------------------------------
@@ -243,6 +265,156 @@ app.delete('/api/carrinho/:produtoId', autenticar, (req, res) => {
   });
 });
 
+// ------------------------------------------------------------------
+//             P A G A M E N T O   E   P E D I D O S
+// ------------------------------------------------------------------
+
+app.post('/api/pagamento/processar', autenticar, (req, res) => {
+  const sqlCarrinho = `
+    SELECT produto_id, nome, preco, imagem, quantidade
+    FROM carrinho
+    WHERE usuario_login = ?
+  `;
+
+  db.query(sqlCarrinho, [req.login], async (err, itens) => {
+    if (err) {
+      console.error('Erro ao consultar carrinho no pagamento:', err);
+      return res.status(500).json({ mensagem: 'Erro ao consultar carrinho.' });
+    }
+
+    if (!itens || itens.length === 0) {
+      return res.status(400).json({ mensagem: 'Seu carrinho está vazio.' });
+    }
+
+    const valorTotal = Number(
+      itens.reduce((acc, item) => acc + Number(item.preco) * Number(item.quantidade), 0).toFixed(2)
+    );
+
+    const { token, installments, payment_method_id, issuer_id, payer } = req.body;
+
+    if (!payer || !payer.email) {
+      return res.status(400).json({ mensagem: 'Informe o e-mail do pagador.' });
+    }
+
+    try {
+      const mpBody = {
+        transaction_amount: valorTotal,
+        description: `Pedido HDS Automação - ${req.login}`,
+        payment_method_id,
+        payer: {
+          email: payer.email,
+          identification: payer.identification
+        }
+      };
+
+      if (token) mpBody.token = token;
+      if (installments) mpBody.installments = Number(installments);
+      if (issuer_id) mpBody.issuer_id = Number(issuer_id);
+
+      const response = await mpPayment.create({ body: mpBody });
+
+      const mpId = String(response.id);
+      const statusPagamento = response.status || 'pending';
+      const metodoPagamento = response.payment_method_id || payment_method_id || 'padrao';
+
+      const sqlPedido = `
+        INSERT INTO pedidos
+          (usuario_login, mp_payment_id, status_pagamento, metodo_pagamento, valor_total, itens_json)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `;
+
+      db.query(
+        sqlPedido,
+        [req.login, mpId, statusPagamento, metodoPagamento, valorTotal, JSON.stringify(itens)],
+        (errPedido, result) => {
+          if (errPedido) {
+            console.error('Erro ao salvar pedido:', errPedido);
+            return res.status(500).json({ mensagem: 'Erro ao salvar o pedido.' });
+          }
+
+          db.query('DELETE FROM carrinho WHERE usuario_login = ?', [req.login], (errLimpa) => {
+            if (errLimpa) console.error('Erro ao limpar carrinho:', errLimpa);
+          });
+
+          return res.status(201).json({
+            pedido_id: result.insertId,
+            mp_payment_id: mpId,
+            status: statusPagamento,
+            metodo_pagamento: metodoPagamento,
+            valor_total: valorTotal,
+            status_detail: response.status_detail,
+            qr_code: response.point_of_interaction?.transaction_data?.qr_code || null,
+            qr_code_base64: response.point_of_interaction?.transaction_data?.qr_code_base64 || null,
+            ticket_url: response.transaction_details?.external_resource_url || null
+          });
+        }
+      );
+    } catch (erroMp) {
+      console.error('Erro Mercado Pago:', erroMp);
+      return res.status(500).json({
+        mensagem: erroMp.message || 'Falha ao processar pagamento.'
+      });
+    }
+  });
+});
+
+app.get('/api/admin/pedidos', autenticar, (req, res) => {
+  db.query('SELECT perfil FROM usuarios WHERE login = ?', [req.login], (errUser, rowsUser) => {
+    if (errUser) {
+      console.error('Erro ao verificar usuário admin:', errUser);
+      return res.status(500).json({ mensagem: 'Erro interno no servidor.' });
+    }
+    if (!rowsUser.length || rowsUser[0].perfil !== 'admin') {
+      return res.status(403).json({ mensagem: 'Acesso restrito.' });
+    }
+
+    const sql = `
+      SELECT
+        p.id,
+        p.usuario_login,
+        u.nome AS usuario_nome,
+        p.mp_payment_id,
+        p.status_pagamento,
+        p.metodo_pagamento,
+        p.valor_total,
+        p.itens_json,
+        p.criado_em
+      FROM pedidos p
+      LEFT JOIN usuarios u ON u.login = p.usuario_login
+      ORDER BY p.criado_em DESC
+    `;
+
+    db.query(sql, (err, rows) => {
+      if (err) {
+        console.error('Erro ao buscar pedidos:', err);
+        return res.status(500).json({ mensagem: 'Erro ao buscar pedidos.' });
+      }
+
+      const pedidos = rows.map((r) => {
+        let itens = [];
+        try {
+          itens = JSON.parse(r.itens_json || '[]');
+        } catch (_) {
+          itens = [];
+        }
+        return {
+          id: r.id,
+          usuario_login: r.usuario_login,
+          usuario_nome: r.usuario_nome || r.usuario_login,
+          mp_payment_id: r.mp_payment_id,
+          status_pagamento: r.status_pagamento,
+          metodo_pagamento: r.metodo_pagamento,
+          valor_total: Number(r.valor_total),
+          itens,
+          criado_em: r.criado_em
+        };
+      });
+
+      return res.json(pedidos);
+    });
+  });
+});
+
 process.on('uncaughtException', (err) => {
   console.error('Erro não capturado no Node:', err);
 });
@@ -250,7 +422,7 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (err) => {
   console.error('Promise rejeitada sem catch:', err);
 });
-  
+
 // ------------------------------------------------------------------
 //                          P Á G I N A S
 // ------------------------------------------------------------------
@@ -262,6 +434,7 @@ app.get('/sobre', pagina('sobre.html'));
 app.get('/solucoes', pagina('solucoes.html'));
 app.get('/contatos', pagina('contatos.html'));
 app.get('/cart', pagina('carrinho.html'));
+app.get('/compra', pagina('compra.html'));
 app.get('/produtos', pagina('produtos.html'));
 app.get('/login', pagina('login.html'));
 app.get('/perfil', pagina('perfil.html'));
