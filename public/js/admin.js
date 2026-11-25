@@ -30,7 +30,7 @@
     try {
       const resp = await fetch('/api/admin/pedidos', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -40,7 +40,14 @@
         return;
       }
 
-      const pedidos = await resp.json();
+      const dados = await resp.json();
+
+      if (!resp.ok) {
+        container.innerHTML = `<p>${dados.mensagem || 'Erro ao carregar pedidos.'}</p>`;
+        return;
+      }
+
+      const pedidos = dados;
 
       if (!Array.isArray(pedidos) || pedidos.length === 0) {
         container.innerHTML = '<p>Nenhum pedido registrado ainda.</p>';
@@ -53,11 +60,16 @@
             .map((i) => `<li>${i.nome} — Qtd: ${i.quantidade} — ${formatarMoeda(i.preco)}</li>`)
             .join('');
 
+          const isAdminReq = pedido.status_pagamento === 'solicitacao_admin';
+          const statusTexto = isAdminReq
+            ? 'SOLICITAÇÃO ADMIN (SEM PAGAMENTO)'
+            : pedido.status_pagamento;
+
           return `
             <div class="pedido-card" style="border:1px solid #334155;padding:16px;margin-bottom:14px;border-radius:8px;">
               <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
                 <strong>Pedido #${pedido.id}</strong>
-                <span>Status: <strong>${pedido.status_pagamento}</strong></span>
+                <span>Status: <strong>${statusTexto}</strong></span>
                 <span>Total: <strong>${formatarMoeda(pedido.valor_total)}</strong></span>
               </div>
               <p style="margin:6px 0;font-size:13px;">

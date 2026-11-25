@@ -8,14 +8,11 @@ const { MercadoPagoConfig, Payment } = require('mercadopago');
 const app = express();
 const PORT = 3000;
 
-// Chave usada para assinar os tokens de login.
-// Em produção, defina a variável de ambiente JWT_SECRET com um valor longo e aleatório.
 const JWT_SECRET = process.env.JWT_SECRET || 'troque-esta-chave-em-desenvolvimento';
 if (!process.env.JWT_SECRET) {
   console.warn('AVISO: JWT_SECRET não definido. Usando chave de desenvolvimento.');
 }
 
-// Mercado Pago
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || 'SEU_ACCESS_TOKEN_AQUI';
 const mpClient = new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN });
 const mpPayment = new Payment(mpClient);
@@ -29,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'andrade@2710', // coloque a senha do MySQL se houver
+  password: 'andrade@2710',
   database: 'BDHDS'
 });
 
@@ -58,10 +55,60 @@ db.connect((err) => {
 });
 
 // ------------------------------------------------------------------
+//                        H E L P E R S   E   A U T H
+// ------------------------------------------------------------------
+function autenticar(req, res, next) {
+  const cabecalho = req.headers.authorization || '';
+  const token = cabecalho.startsWith('Bearer ') ? cabecalho.slice(7) : null;
+
+  if (!token) {
+    return res.status(401).json({ mensagem: 'Não autenticado.' });
+  }
+
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    req.login = payload.login;
+    next();
+  } catch (_) {
+    return res.status(401).json({ mensagem: 'Sessão inválida ou expirada.' });
+  }
+}
+
+function exigirAdmin(req, res, next) {
+  db.query('SELECT perfil FROM usuarios WHERE login = ?', [req.login], (err, rows) => {
+    if (err) {
+      console.error('Erro ao verificar admin:', err);
+      return res.status(500).json({ mensagem: 'Erro interno no servidor.' });
+    }
+    if (!rows.length || rows[0].perfil !== 'admin') {
+      return res.status(403).json({ mensagem: 'Acesso restrito.' });
+    }
+    next();
+  });
+}
+
+function buscarCarrinhoComTotal(login, callback) {
+  const sql = `
+    SELECT produto_id, nome, preco, imagem, quantidade
+    FROM carrinho
+    WHERE usuario_login = ?
+  `;
+  db.query(sql, [login], (err, itens) => {
+    if (err) return callback(err);
+    const lista = itens || [];
+    const valorTotal = Number(
+      lista
+        .reduce((acc, item) => acc + Number(item.preco) * Number(item.quantidade), 0)
+        .toFixed(2)
+    );
+    callback(null, lista, valorTotal);
+  });
+}
+
+// ------------------------------------------------------------------
 //                              A P I
 // ------------------------------------------------------------------
 
-// Cadastro
 app.post('/api/cadastrar', async (req, res) => {
   const { nome, login, senha } = req.body;
 
@@ -89,7 +136,6 @@ app.post('/api/cadastrar', async (req, res) => {
   }
 });
 
-// Login
 app.post('/api/login', (req, res) => {
   const { login, senha } = req.body;
 
@@ -117,7 +163,6 @@ app.post('/api/login', (req, res) => {
         return res.status(401).json({ mensagem: 'Login ou senha incorretos!' });
       }
 
-      // Token que prova quem está logado (vale por 2 horas)
       const token = jwt.sign({ login: usuario.login }, JWT_SECRET, { expiresIn: '2h' });
 
       return res.json({
@@ -132,25 +177,6 @@ app.post('/api/login', (req, res) => {
   });
 });
 
-// Middleware: só deixa passar quem enviou um token válido
-function autenticar(req, res, next) {
-  const cabecalho = req.headers.authorization || '';
-  const token = cabecalho.startsWith('Bearer ') ? cabecalho.slice(7) : null;
-
-  if (!token) {
-    return res.status(401).json({ mensagem: 'Não autenticado.' });
-  }
-
-  try {
-    const payload = jwt.verify(token, JWT_SECRET);
-    req.login = payload.login; // quem está logado, definido pelo servidor
-    next();
-  } catch (erro) {
-    return res.status(401).json({ mensagem: 'Sessão inválida ou expirada.' });
-  }
-}
-
-// Perfil da conta logada (o servidor descobre quem é pelo token, nunca pela URL)
 app.get('/api/me', autenticar, (req, res) => {
   const sql = 'SELECT nome, login, perfil FROM usuarios WHERE login = ?';
 
@@ -170,7 +196,6 @@ app.get('/api/me', autenticar, (req, res) => {
 //                     A P I   D O   C A R R I N H O
 // ------------------------------------------------------------------
 
-// Listar itens do carrinho da conta logada
 app.get('/api/carrinho', autenticar, (req, res) => {
   const sql = `
     SELECT produto_id, nome, preco, imagem, quantidade
@@ -188,7 +213,6 @@ app.get('/api/carrinho', autenticar, (req, res) => {
   });
 });
 
-// Adicionar item (ou somar quantidade se já existir na conta)
 app.post('/api/carrinho', autenticar, (req, res) => {
   const { produto_id, nome, preco, imagem, quantidade } = req.body;
   const qtd = Math.max(1, parseInt(quantidade, 10) || 1);
@@ -220,7 +244,6 @@ app.post('/api/carrinho', autenticar, (req, res) => {
   );
 });
 
-// Alterar quantidade (+ ou -)
 app.put('/api/carrinho/:produtoId', autenticar, (req, res) => {
   const { produtoId } = req.params;
   const quantidade = parseInt(req.body.quantidade, 10);
@@ -251,7 +274,6 @@ app.put('/api/carrinho/:produtoId', autenticar, (req, res) => {
   });
 });
 
-// Remover item específico
 app.delete('/api/carrinho/:produtoId', autenticar, (req, res) => {
   const { produtoId } = req.params;
   const sql = 'DELETE FROM carrinho WHERE usuario_login = ? AND produto_id = ?';
@@ -269,31 +291,59 @@ app.delete('/api/carrinho/:produtoId', autenticar, (req, res) => {
 //             P A G A M E N T O   E   P E D I D O S
 // ------------------------------------------------------------------
 
-app.post('/api/pagamento/processar', autenticar, (req, res) => {
-  const sqlCarrinho = `
-    SELECT produto_id, nome, preco, imagem, quantidade
-    FROM carrinho
-    WHERE usuario_login = ?
-  `;
+// Solicitação direta de ADMIN (sem pagamento)
+app.post('/api/admin/solicitar-pedido', autenticar, exigirAdmin, (req, res) => {
+  buscarCarrinhoComTotal(req.login, (err, itens, valorTotal) => {
+    if (err) {
+      console.error('Erro ao consultar carrinho na solicitação admin:', err);
+      return res.status(500).json({ mensagem: 'Erro ao consultar carrinho.' });
+    }
 
-  db.query(sqlCarrinho, [req.login], async (err, itens) => {
+    if (!itens.length) {
+      return res.status(400).json({ mensagem: 'Seu carrinho está vazio.' });
+    }
+
+    const sqlPedido = `
+      INSERT INTO pedidos
+        (usuario_login, mp_payment_id, status_pagamento, metodo_pagamento, valor_total, itens_json)
+      VALUES (?, NULL, 'solicitacao_admin', 'admin_bypass', ?, ?)
+    `;
+
+    db.query(sqlPedido, [req.login, valorTotal, JSON.stringify(itens)], (errPedido, result) => {
+      if (errPedido) {
+        console.error('Erro ao salvar solicitação admin:', errPedido);
+        return res.status(500).json({ mensagem: 'Erro ao salvar solicitação.' });
+      }
+
+      db.query('DELETE FROM carrinho WHERE usuario_login = ?', [req.login], (errLimpa) => {
+        if (errLimpa) console.error('Erro ao limpar carrinho:', errLimpa);
+      });
+
+      return res.status(201).json({
+        pedido_id: result.insertId,
+        status: 'solicitacao_admin',
+        valor_total: valorTotal
+      });
+    });
+  });
+});
+
+// Processar pagamento via Mercado Pago
+app.post('/api/pagamento/processar', autenticar, (req, res) => {
+  buscarCarrinhoComTotal(req.login, async (err, itens, valorTotal) => {
     if (err) {
       console.error('Erro ao consultar carrinho no pagamento:', err);
       return res.status(500).json({ mensagem: 'Erro ao consultar carrinho.' });
     }
 
-    if (!itens || itens.length === 0) {
+    if (!itens.length) {
       return res.status(400).json({ mensagem: 'Seu carrinho está vazio.' });
     }
 
-    const valorTotal = Number(
-      itens.reduce((acc, item) => acc + Number(item.preco) * Number(item.quantidade), 0).toFixed(2)
-    );
-
     const { token, installments, payment_method_id, issuer_id, payer } = req.body;
 
-    if (!payer || !payer.email) {
-      return res.status(400).json({ mensagem: 'Informe o e-mail do pagador.' });
+    if (!payer?.email || !payment_method_id) {
+      return res.status(400).json({ mensagem: 'Informe e-mail do pagador e método de pagamento.' });
     }
 
     try {
@@ -303,7 +353,9 @@ app.post('/api/pagamento/processar', autenticar, (req, res) => {
         payment_method_id,
         payer: {
           email: payer.email,
-          identification: payer.identification
+          first_name: payer.first_name || 'Cliente',
+          last_name: payer.last_name || 'HDS',
+          ...(payer.identification ? { identification: payer.identification } : {})
         }
       };
 
@@ -315,7 +367,7 @@ app.post('/api/pagamento/processar', autenticar, (req, res) => {
 
       const mpId = String(response.id);
       const statusPagamento = response.status || 'pending';
-      const metodoPagamento = response.payment_method_id || payment_method_id || 'padrao';
+      const metodoPagamento = response.payment_method_id || payment_method_id;
 
       const sqlPedido = `
         INSERT INTO pedidos
@@ -351,67 +403,56 @@ app.post('/api/pagamento/processar', autenticar, (req, res) => {
       );
     } catch (erroMp) {
       console.error('Erro Mercado Pago:', erroMp);
-      return res.status(500).json({
-        mensagem: erroMp.message || 'Falha ao processar pagamento.'
-      });
+      const msg = erroMp?.cause?.[0]?.description || erroMp?.message || 'Falha ao processar pagamento.';
+      return res.status(400).json({ mensagem: msg });
     }
   });
 });
 
-app.get('/api/admin/pedidos', autenticar, (req, res) => {
-  db.query('SELECT perfil FROM usuarios WHERE login = ?', [req.login], (errUser, rowsUser) => {
-    if (errUser) {
-      console.error('Erro ao verificar usuário admin:', errUser);
-      return res.status(500).json({ mensagem: 'Erro interno no servidor.' });
-    }
-    if (!rowsUser.length || rowsUser[0].perfil !== 'admin') {
-      return res.status(403).json({ mensagem: 'Acesso restrito.' });
+app.get('/api/admin/pedidos', autenticar, exigirAdmin, (req, res) => {
+  const sql = `
+    SELECT
+      p.id,
+      p.usuario_login,
+      u.nome AS usuario_nome,
+      p.mp_payment_id,
+      p.status_pagamento,
+      p.metodo_pagamento,
+      p.valor_total,
+      p.itens_json,
+      p.criado_em
+    FROM pedidos p
+    LEFT JOIN usuarios u ON u.login = p.usuario_login
+    ORDER BY p.criado_em DESC
+  `;
+
+  db.query(sql, (err, rows) => {
+    if (err) {
+      console.error('Erro ao buscar pedidos:', err);
+      return res.status(500).json({ mensagem: 'Erro ao buscar pedidos.' });
     }
 
-    const sql = `
-      SELECT
-        p.id,
-        p.usuario_login,
-        u.nome AS usuario_nome,
-        p.mp_payment_id,
-        p.status_pagamento,
-        p.metodo_pagamento,
-        p.valor_total,
-        p.itens_json,
-        p.criado_em
-      FROM pedidos p
-      LEFT JOIN usuarios u ON u.login = p.usuario_login
-      ORDER BY p.criado_em DESC
-    `;
-
-    db.query(sql, (err, rows) => {
-      if (err) {
-        console.error('Erro ao buscar pedidos:', err);
-        return res.status(500).json({ mensagem: 'Erro ao buscar pedidos.' });
+    const pedidos = rows.map((r) => {
+      let itens = [];
+      try {
+        itens = JSON.parse(r.itens_json || '[]');
+      } catch (_) {
+        itens = [];
       }
-
-      const pedidos = rows.map((r) => {
-        let itens = [];
-        try {
-          itens = JSON.parse(r.itens_json || '[]');
-        } catch (_) {
-          itens = [];
-        }
-        return {
-          id: r.id,
-          usuario_login: r.usuario_login,
-          usuario_nome: r.usuario_nome || r.usuario_login,
-          mp_payment_id: r.mp_payment_id,
-          status_pagamento: r.status_pagamento,
-          metodo_pagamento: r.metodo_pagamento,
-          valor_total: Number(r.valor_total),
-          itens,
-          criado_em: r.criado_em
-        };
-      });
-
-      return res.json(pedidos);
+      return {
+        id: r.id,
+        usuario_login: r.usuario_login,
+        usuario_nome: r.usuario_nome || r.usuario_login,
+        mp_payment_id: r.mp_payment_id,
+        status_pagamento: r.status_pagamento,
+        metodo_pagamento: r.metodo_pagamento,
+        valor_total: Number(r.valor_total),
+        itens,
+        criado_em: r.criado_em
+      };
     });
+
+    return res.json(pedidos);
   });
 });
 
@@ -433,22 +474,20 @@ app.get('/', pagina('paginainicial.html'));
 app.get('/sobre', pagina('sobre.html'));
 app.get('/solucoes', pagina('solucoes.html'));
 app.get('/contatos', pagina('contatos.html'));
-app.get('/cart', pagina('carrinho.html'));
+app.get('/carrinho', pagina('carrinho.html'));
 app.get('/compra', pagina('compra.html'));
 app.get('/produtos', pagina('produtos.html'));
 app.get('/login', pagina('login.html'));
 app.get('/perfil', pagina('perfil.html'));
 app.get('/admin', pagina('admin.html'));
 
-// Todos os produtos: /nome-do-produto -> pages/allproducts/nome-do-produto.html
 app.get('/:id', (req, res, next) => {
-  const id = path.basename(req.params.id); // evita "../" na URL
+  const id = path.basename(req.params.id);
   res.sendFile(path.join(__dirname, 'pages', 'allproducts', `${id}.html`), (err) => {
-    if (err) next(); // não achou o arquivo: cai no 404 abaixo
+    if (err) next();
   });
 });
 
-// Rota não encontrada
 app.use((req, res) => {
   res.status(404).send('<h1>Página não encontrada!</h1>');
 });

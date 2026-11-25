@@ -1,27 +1,343 @@
-* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-body { margin: 0; min-height: 100vh; color: #fff; background: linear-gradient(135deg, #0b318f, #031548); }
-.compra-main { max-width: 1000px; margin: 0 auto; padding: 48px 20px; min-height: calc(100vh - 200px); }
-.compra-main h1 { margin: 0 0 24px; font-size: 1.8rem; }
-.compra-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: start; }
-.compra-grid[hidden], .compra-card[hidden] { display: none; }
-.compra-card { padding: 28px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.25); border-radius: 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-.compra-card h2 { margin: 0 0 16px; font-size: 1.15rem; }
-.compra-card h2:not(:first-child) { margin-top: 28px; }
-.compra-card label { display: block; margin-bottom: 14px; font-size: .85rem; opacity: .9; }
-.compra-card input[type=text] { display: block; width: 100%; margin-top: 6px; padding: 11px 12px; font-size: 1rem; color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.4); border-radius: 6px; outline: none; }
-.compra-card input[type=text]:focus { border-color: #00a8ff; box-shadow: 0 0 8px rgba(0,168,255,.6); }
-.compra-linha { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
-.compra-radio { display: flex !important; align-items: center; gap: 10px; padding: 12px; font-size: 1rem !important; opacity: 1 !important; border: 1px solid rgba(255,255,255,.3); border-radius: 6px; cursor: pointer; }
-.compra-radio:has(input:checked) { border-color: #00a8ff; background: rgba(0,168,255,.12); }
-.compra-msg { min-height: 1.2em; margin: 12px 0; color: #ff9b9b; font-size: .9rem; }
-.compra-btn { display: block; width: 100%; padding: 14px; font-size: 1rem; font-weight: 700; text-align: center; text-decoration: none; color: #06184c; background: #fff; border: 1px solid #fff; cursor: pointer; transition: box-shadow .2s; }
-.compra-btn:hover { box-shadow: 0 0 14px rgba(0,168,255,.8); }
-.compra-btn:disabled { opacity: .6; cursor: wait; }
-.compra-resumo { margin: 0 0 16px; padding: 0; list-style: none; }
-.compra-resumo li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.15); }
-.compra-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 1.1rem; }
-.compra-total strong { font-size: 1.4rem; }
-.compra-link { padding: 0; color: #fff; background: none; border: none; text-decoration: underline; opacity: .8; cursor: pointer; }
-.compra-centro { max-width: 560px; margin: 0 auto; text-align: center; }
-.compra-centro .compra-btn { margin-top: 18px; }
-@media (max-width: 760px) { .compra-grid { grid-template-columns: 1fr; } }
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #ffffff;
+  background-color: #071b63;
+}
+
+.compra-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 28px 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+  column-gap: 48px;
+  row-gap: 24px;
+  align-items: start;
+}
+
+.compra-header {
+  grid-column: 1 / -1;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.compra-header h1 {
+  margin: 0 0 6px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.compra-header p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Coluna direita: resumo de itens e total */
+.compra-itens {
+  grid-column: 2;
+  grid-row: 2;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px 0;
+}
+
+.compra-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+.compra-item-esq {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.compra-item-esq img {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  flex-shrink: 0;
+}
+
+.compra-item-nome {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.compra-item-qtd {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
+}
+
+.compra-item-preco {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.compra-resumo-total {
+  grid-column: 2;
+  grid-row: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.compra-resumo-total strong {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Coluna esquerda: checkout e modo admin */
+#area-checkout,
+#area-admin-solicitar,
+#compra-confirmacao {
+  grid-column: 1;
+  grid-row: 2 / span 4;
+}
+
+.compra-secao {
+  margin-bottom: 24px;
+}
+
+.compra-secao h2 {
+  margin: 0 0 14px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.campo-grupo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.campo-grupo:last-child {
+  margin-bottom: 0;
+}
+
+.campo-grupo.full {
+  grid-template-columns: 1fr;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.campo label {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.campo input,
+.campo select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #111827;
+  font-size: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.campo input::placeholder {
+  color: #6b7280;
+}
+
+.campo input:focus,
+.campo select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+}
+
+#pagamento-padrao-box {
+  background: #ffffff;
+  color: #111827;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+
+#pagamento-padrao-box .campo label {
+  color: #374151;
+}
+
+#pagamento-padrao-box .campo input,
+#pagamento-padrao-box .campo select {
+  border-color: #9ca3af;
+}
+
+.btn-pagar-padrao {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1773b0;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-pagar-padrao:hover {
+  background-color: #125b8c;
+}
+
+.btn-admin-solicitar {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #5a31f4;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-admin-solicitar:hover {
+  background-color: #4823d1;
+}
+
+.btn-admin-solicitar:disabled,
+.btn-pagar-padrao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.aviso-mp {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.compra-vazio {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 32px 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.compra-btn-link {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 11px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: #ffffff;
+  color: #071b63;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.compra-btn-link:hover {
+  background: #e2e8f0;
+}
+
+.comprovante-box {
+  padding: 22px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #cbd5e1;
+}
+
+.comprovante-box h2 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  color: #071b63;
+}
+
+.comprovante-box p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.pix-area {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  text-align: center;
+  color: #111827;
+}
+
+.pix-area img {
+  max-width: 220px;
+  margin: 12px auto;
+  display: block;
+}
+
+.pix-copia {
+  word-break: break-all;
+  font-size: 12px;
+  padding: 10px;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #cbd5e1;
+}
+
+@media (max-width: 860px) {
+  .compra-main {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    padding: 24px 16px 48px;
+  }
+
+  .compra-itens,
+  .compra-resumo-total,
+  #area-checkout,
+  #area-admin-solicitar,
+  #compra-confirmacao {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .campo-grupo {
+    grid-template-columns: 1fr;
+  }
+}

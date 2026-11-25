@@ -379,6 +379,7 @@ body {
 }
 
 .sidebar {
+  position: sticky;
   width: 280px;
   flex-shrink: 0;
   position: sticky;

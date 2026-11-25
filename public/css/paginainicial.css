@@ -23,8 +23,8 @@ body {
   box-sizing: border-box;
   appearance: none;
   -webkit-appearance: none;
-  width: 11px;   /* largura da barra inativa */
-  height: 4px;   /* espessura da barra */
+  width: 11px;
+  height: 4px;
   padding: 0;
   margin: 0;
   background-color: rgba(255, 255, 255, 0.35);
@@ -179,7 +179,6 @@ body {
   z-index: 2;
 }
 
-/* Entrada escalonada (stagger) dos textos do Hero */
 .category1, 
 .category2, 
 .category3 {
@@ -194,7 +193,9 @@ body {
   animation: fadeSlideUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
 }
 
-.home-content1 h1, .home-content2 h1, .home-content3 h1 {
+.home-content1 h1, 
+.home-content2 h1, 
+.home-content3 h1 {
   font-size: 48px;
   font-weight: 900;
   color: #ffffff;
@@ -204,7 +205,9 @@ body {
   animation: fadeSlideUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
 }
 
-.home-content1 h2, .home-content2 h2, .home-content3 h2 {
+.home-content1 h2, 
+.home-content2 h2, 
+.home-content3 h2 {
   font-size: 20px;
   font-weight: 400;
   color: #e2e8f0;
@@ -214,7 +217,9 @@ body {
   animation: fadeSlideUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
 }
 
-.home-content1 p, .home-content2 p, .home-content3 p {
+.home-content1 p, 
+.home-content2 p, 
+.home-content3 p {
   color: #94a3b8;
   font-size: 13px;
   margin: 0 0 24px 0;
