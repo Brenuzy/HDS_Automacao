@@ -1,6 +1,6 @@
 (function () {
   const footerHTML = `
-  <section class="page-end-section">
+  <footer class="page-end-section" id="hds-global-footer">
     <div class="glow-line-end footer-reveal"></div>
 
     <div class="footer-container">
@@ -62,28 +62,58 @@
     <div class="company-rights footer-reveal" style="--stagger: 4;">
       <p>© 2026 HDS Automação. Todos os direitos reservados.</p>
     </div>
-  </section>
+  </footer>
 
 <style>
-.page-end-section {
-  width: 100%;
-  box-sizing: border-box;
-  color: #ffffff;
-  font-family: Arial, sans-serif;
-  padding: 20px 40px 40px 40px;
-  position: relative;
-  overflow: hidden;
+html {
+  scrollbar-gutter: stable;
 }
 
-/* ================= LINHA BRILHANTE FINAL (ESTILO CONTRINEX) ================= */
-.glow-line-end {
-  position: relative;
+html, body {
+  min-height: 100vh;
+  background-color: #0b256b;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#footer-placeholder {
+  width: 100% !important;
+  max-width: none !important;
+  margin: auto 0 0 0 !important;
+  padding: 0 !important;
+  clear: both;
   display: block;
-  width: 85%;
-  max-width: 1200px;
-  height: 2px;
-  margin: 40px auto 60px auto;
-  border: none;
+  position: relative;
+}
+
+/* Uso de <footer> + #hds-global-footer + !important evita conflito com regras de <section> de outras páginas */
+#hds-global-footer.page-end-section {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 20px 40px 40px 40px !important;
+  box-sizing: border-box !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  font-family: Arial, sans-serif !important;
+  text-align: left !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* ================= LINHA BRILHANTE FINAL ================= */
+#hds-global-footer .glow-line-end {
+  position: relative !important;
+  display: block !important;
+  width: 85% !important;
+  max-width: 1200px !important;
+  height: 2px !important;
+  margin: 40px auto 60px auto !important;
+  border: none !important;
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -94,19 +124,19 @@
     #7dd3fc 68%,
     rgba(56, 189, 248, 0.35) 82%,
     transparent 100%
-  );
+  ) !important;
   transform: scaleX(0.55);
   opacity: 0;
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
               opacity 0.7s ease;
 }
 
-.glow-line-end.is-visible {
+#hds-global-footer .glow-line-end.is-visible {
   transform: scaleX(1);
   opacity: 1;
 }
 
-.glow-line-end::before {
+#hds-global-footer .glow-line-end::before {
   content: '';
   position: absolute;
   top: -3px;
@@ -126,7 +156,7 @@
   animation: footerBeamPulse 3.5s ease-in-out infinite;
 }
 
-.glow-line-end::after {
+#hds-global-footer .glow-line-end::after {
   content: '';
   position: absolute;
   top: -20px;
@@ -157,67 +187,78 @@
 }
 
 /* ================= GRID E COLUNAS DO FOOTER ================= */
-.footer-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 60px;
-  max-width: 1200px;
-  margin: 0 auto;
+#hds-global-footer .footer-container {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 60px !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
-.footer-col {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex: 1;
-  margin-bottom: 24px;
-  gap: 6px;
+#hds-global-footer .footer-col {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  flex: 1 1 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 0 24px 0 !important;
+  padding: 0 !important;
+  gap: 6px !important;
+  text-align: left !important;
 }
 
-.footer-col h3 {
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 1.2px;
-  color: #ffffff;
-  margin: 0 0 14px 0;
-  text-transform: uppercase;
+#hds-global-footer .footer-col h3 {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.2px !important;
+  color: #ffffff !important;
+  margin: 0 0 14px 0 !important;
+  padding: 0 !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
 }
 
-.footer-logo {
-  width: 100%;
-  max-width: 240px;
-  height: auto;
-  display: block;
-  margin-bottom: 18px;
+#hds-global-footer .footer-logo {
+  width: 100% !important;
+  max-width: 240px !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 0 18px 0 !important;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
 }
 
-.footer-logo:hover {
+#hds-global-footer .footer-logo:hover {
   transform: scale(1.03);
   filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.35));
 }
 
-.footer-col a {
-  color: rgba(255, 255, 255, 0.85);
-  text-decoration: none;
-  font-size: 14px;
-  margin-bottom: 8px;
-  line-height: 1.4;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 3px;
+#hds-global-footer .footer-col a {
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.4 !important;
+  position: relative !important;
+  display: inline-block !important;
+  padding: 0 0 3px 0 !important;
+  text-align: left !important;
   transition: color 0.25s ease,
               transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.footer-col a:hover {
-  color: #ffffff;
+#hds-global-footer .footer-col a:hover {
+  color: #ffffff !important;
   transform: translateX(4px);
 }
 
-.footer-col a::after {
+#hds-global-footer .footer-col a::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -231,63 +272,65 @@
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.footer-col a:hover::after {
+#hds-global-footer .footer-col a:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
 
 /* ================= ITENS DE CONTATO ================= */
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
+#hds-global-footer .contact-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  margin: 0 0 14px 0 !important;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.contact-item:hover {
+#hds-global-footer .contact-item:hover {
   transform: translateX(3px);
 }
 
-.page-end-section .icon {
-  width: 20px;
-  height: 20px;
-  color: #ffffff;
-  flex-shrink: 0;
+#hds-global-footer .icon {
+  width: 20px !important;
+  height: 20px !important;
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-.contact-item:hover .icon {
+#hds-global-footer .contact-item:hover .icon {
   transform: scale(1.12);
   filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8));
 }
 
-.contact-item span {
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 14px;
-  line-height: 1.4;
-  text-align: left;
+#hds-global-footer .contact-item span {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
 }
 
 /* ================= REDES SOCIAIS ================= */
-.social-icons {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 4px;
+#hds-global-footer .social-icons {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+  margin-top: 4px !important;
 }
 
-.social-icons a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  margin: 0;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+#hds-global-footer .social-icons a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff !important;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
               background-color 0.3s ease,
               border-color 0.3s ease,
@@ -295,39 +338,42 @@
               box-shadow 0.3s ease;
 }
 
-.social-icons a::after {
-  display: none;
+#hds-global-footer .social-icons a::after {
+  display: none !important;
 }
 
-.social-icons a:hover {
-  background-color: rgba(0, 168, 255, 0.1);
-  border-color: transparent;
+#hds-global-footer .social-icons a:hover {
+  background-color: rgba(0, 168, 255, 0.1) !important;
+  border-color: transparent !important;
   transform: translateY(-4px);
 }
 
-.social-icon {
-  width: 20px;
-  height: 20px;
+#hds-global-footer .social-icon {
+  width: 20px !important;
+  height: 20px !important;
 }
 
 /* ================= DIREITOS AUTORAIS ================= */
-.company-rights {
-  max-width: 1200px;
-  margin: 24px auto 0 auto;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: left;
+#hds-global-footer .company-rights {
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 24px auto 0 auto !important;
+  padding-top: 20px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
 }
 
-.company-rights p {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.55);
-  margin: 0;
+#hds-global-footer .company-rights p {
+  font-size: 13px !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  margin: 0 !important;
+  text-align: left !important;
 }
 
 /* ================= ANIMAÇÃO DE ENTRADA AO ROLAR ================= */
-.footer-col.footer-reveal,
-.company-rights.footer-reveal {
+#hds-global-footer .footer-col.footer-reveal,
+#hds-global-footer .company-rights.footer-reveal {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
@@ -335,55 +381,56 @@
   transition-delay: calc(var(--stagger, 0) * 0.1s);
 }
 
-.footer-col.footer-reveal.is-visible,
-.company-rights.footer-reveal.is-visible {
+#hds-global-footer .footer-col.footer-reveal.is-visible,
+#hds-global-footer .company-rights.footer-reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* ================= RESPONSIVIDADE DO FOOTER ================= */
 @media (max-width: 1024px) {
-  .footer-container {
-    gap: 36px;
+  #hds-global-footer .footer-container {
+    gap: 36px !important;
   }
 }
 
 @media (max-width: 768px) {
-  .page-end-section {
-    padding: 20px 24px 36px 24px;
+  #hds-global-footer.page-end-section {
+    padding: 20px 24px 36px 24px !important;
   }
 
-  .glow-line-end {
-    width: 92%;
-    margin: 24px auto 40px auto;
+  #hds-global-footer .glow-line-end {
+    width: 92% !important;
+    margin: 24px auto 40px auto !important;
   }
 
-  .footer-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
+  #hds-global-footer .footer-container {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 32px !important;
   }
 }
 
 @media (max-width: 520px) {
-  .footer-container {
-    grid-template-columns: 1fr;
-    gap: 28px;
+  #hds-global-footer .footer-container {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
   }
 
-  .footer-logo {
-    max-width: 200px;
+  #hds-global-footer .footer-logo {
+    max-width: 200px !important;
   }
 
-  .company-rights {
-    text-align: center;
+  #hds-global-footer .company-rights,
+  #hds-global-footer .company-rights p {
+    text-align: center !important;
   }
 }
 </style>
   `;
 
   function configurarAnimacoesRodape() {
-    const elementos = document.querySelectorAll(".page-end-section .footer-reveal");
+    const elementos = document.querySelectorAll("#hds-global-footer .footer-reveal");
     if (!elementos.length) return;
 
     const observer = new IntersectionObserver(
@@ -405,13 +452,17 @@
   }
 
   function montarRodape() {
-    const alvo = document.getElementById("footer-placeholder") || document.body;
-    if (alvo === document.body) {
-      alvo.insertAdjacentHTML("beforeend", footerHTML);
-    } else {
-      alvo.innerHTML = footerHTML;
+    let alvo = document.getElementById("footer-placeholder");
+
+    if (!alvo) {
+      alvo = document.createElement("div");
+      alvo.id = "footer-placeholder";
+      document.body.appendChild(alvo);
+    } else if (alvo.parentElement !== document.body) {
+      document.body.appendChild(alvo);
     }
 
+    alvo.innerHTML = footerHTML;
     configurarAnimacoesRodape();
   }
 

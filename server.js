@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { MercadoPagoConfig, Payment } = require('mercadopago');
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 const JWT_SECRET = process.env.JWT_SECRET || 'troque-esta-chave-em-desenvolvimento';
 if (!process.env.JWT_SECRET) {

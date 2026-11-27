@@ -77,6 +77,70 @@
       };
     }
 
+    async function enviarSolicitacaoAdmin(botaoEl, isContaCliente = false, valorTotalPedido = 0) {
+      const headers = criarHeaders();
+      if (!headers) return;
+
+      let cliente = null;
+      if (isContaCliente) {
+        cliente = obterDadosCliente();
+        if (!cliente) return;
+      }
+
+      if (botaoEl) botaoEl.disabled = true;
+      try {
+        const resAdmin = await fetch('/api/admin/solicitar-pedido', {
+          method: 'POST',
+          headers,
+          body: cliente
+            ? JSON.stringify({
+                cliente_nome: cliente.nome,
+                cliente_email: cliente.email,
+                endereco_entrega: cliente.endereco,
+                identification: cliente.identification
+              })
+            : undefined
+        });
+
+        if (resAdmin.status === 401) {
+          redirecionarSessaoExpirada();
+          return;
+        }
+
+        const dataAdmin = await resAdmin.json().catch(() => ({}));
+        if (!resAdmin.ok) {
+          alert(dataAdmin.mensagem || 'Erro ao enviar pedido.');
+          return;
+        }
+
+        if (typeof carregarCarrinho === 'function') {
+          carregarCarrinho();
+        }
+
+        if (isContaCliente) {
+          areaCheckoutEl.style.display = 'none';
+          listaEl.innerHTML = '';
+          blocoTotalEl.style.display = 'none';
+          subtituloEl.textContent = 'Pedido enviado com sucesso!';
+
+          confirmacaoEl.innerHTML = `
+            <div class="comprovante-box">
+              <h2>Pedido Registrado — #${dataAdmin.pedido_id || 'Teste'}</h2>
+              <p><strong>Cliente:</strong> ${cliente.nome} (${cliente.email})</p>
+              <p><strong>Endereço:</strong> ${cliente.endereco}</p>
+              <p><strong>Status:</strong> Enviado ao painel administrativo (Modo Teste)</p>
+              <p><strong>Valor Total:</strong> ${formatarBRL(dataAdmin.valor_total || valorTotalPedido)}</p>
+              <a href="/produtos" class="compra-btn-link">Voltar ao Catálogo</a>
+            </div>
+          `;
+        } else {
+          window.location.href = '/admin';
+        }
+      } finally {
+        if (botaoEl) botaoEl.disabled = false;
+      }
+    }
+
     async function enviarPagamento(payloadExtra) {
       const headers = criarHeaders();
       if (!headers) return;
@@ -211,36 +275,16 @@
         if (areaAdminEl) areaAdminEl.style.display = 'block';
 
         if (btnAdminEl) {
-          btnAdminEl.addEventListener('click', async () => {
-            btnAdminEl.disabled = true;
-            try {
-              const resAdmin = await fetch('/api/admin/solicitar-pedido', {
-                method: 'POST',
-                headers
-              });
-              if (resAdmin.status === 401) {
-                redirecionarSessaoExpirada();
-                return;
-              }
-              const dataAdmin = await resAdmin.json().catch(() => ({}));
-              if (!resAdmin.ok) {
-                alert(dataAdmin.mensagem || 'Erro ao enviar solicitação para admin.');
-                return;
-              }
-              if (typeof carregarCarrinho === 'function') {
-                carregarCarrinho();
-              }
-              window.location.href = '/admin';
-            } finally {
-              btnAdminEl.disabled = false;
-            }
-          });
+          btnAdminEl.addEventListener('click', () => enviarSolicitacaoAdmin(btnAdminEl, false));
         }
         return;
       }
 
       if (usuarioSalvo && usuarioSalvo.nome) {
         document.getElementById('cliente-nome').value = usuarioSalvo.nome;
+      }
+      if (usuarioSalvo && usuarioSalvo.email) {
+        document.getElementById('cliente-email').value = usuarioSalvo.email;
       }
 
       subtituloEl.textContent = 'Confira os itens abaixo e escolha a forma de pagamento:';
@@ -259,6 +303,13 @@
             btnPag.disabled = false;
           }
         });
+      }
+
+      const btnSolicitarCliente = document.getElementById('btn-solicitar-orcamento-cliente');
+      if (btnSolicitarCliente) {
+        btnSolicitarCliente.addEventListener('click', () =>
+          enviarSolicitacaoAdmin(btnSolicitarCliente, true, valorTotal)
+        );
       }
 
       const PUBLIC_KEY = 'SUA_PUBLIC_KEY_AQUI';

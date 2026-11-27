@@ -725,7 +725,7 @@
   padding: 13px 16px;
   box-sizing: border-box;
   background-color: transparent;
-  border: 1px solid #ffffff;
+  border: 2px solid #ffffff;
   color: #ffffff;
   text-align: center;
   text-decoration: none;
@@ -737,7 +737,8 @@
 }
 
 .cart-checkout-btn:hover {
-  background-color: #0086cc;
+  background-color: #fff;
+  color: #000;
   box-shadow: 0 6px 20px rgba(0, 168, 255, 0.45);
 }
 

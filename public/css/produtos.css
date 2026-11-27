@@ -3,13 +3,12 @@ body {
   color: #ffffff;
   margin: 0;
   font-family: Arial, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .products-section-event {
   background: linear-gradient(180deg, #0b256b 0%, #10338f 20%, #0a2367 40%, #10338e 60%, #0b256b 100%);
   padding: 40px 20px 0 20px;
-  overflow: hidden;
 }
 
 .home-text {
@@ -378,12 +377,18 @@ body {
   width: 100%;
 }
 
+.layout-principal {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
 .sidebar {
   position: sticky;
+  top: 100px;
   width: 280px;
   flex-shrink: 0;
-  position: sticky;
-  top: 100px;
+  align-self: flex-start;
 }
 
 .sidebar .search-bar-container,

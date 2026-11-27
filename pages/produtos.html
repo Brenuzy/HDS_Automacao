@@ -23,49 +23,52 @@
 
     <div class="main-content-layout">
 
-      <aside class="sidebar">
-        <div class="search-bar-container">
-          <div class="search-box">
-            <svg class="search-icon" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-            <input type="text" id="searchInput" placeholder="Pesquise por...">
-          </div>
-        </div>
+<aside class="sidebar" aria-label="Filtros de busca">
+  <div class="search-bar-container">
+    <div class="search-box">
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <input type="search" id="searchInput" placeholder="Pesquise por..." aria-label="Pesquisar produtos" />
+    </div>
+  </div>
 
-        <div class="price-filter-container">
-          <div class="price-filter-header">
-            <div class="price-title">
-              <span class="arrow"></span>
-              <span>Margem de Preços</span>
-            </div>
-            <button type="button" class="clear-btn" id="clearBtn">Clear</button>
-          </div>
-          <div class="price-inputs">
-            <div class="input-box">
-              <span class="currency">R$</span>
-              <input type="number" id="minInput" value="0" min="0" max="2400" />
-            </div>
-            <span class="separator">-</span>
-            <div class="input-box">
-              <span class="currency">R$</span>
-              <input type="number" id="maxInput" value="2400" min="0" max="2400" />
-            </div>
-          </div>
-          <div class="slider-container">
-            <div class="slider-track"></div>
-            <input type="range" id="minRange" min="0" max="2400" value="0" step="100" />
-            <input type="range" id="maxRange" min="0" max="2400" value="2400" step="100" />
-          </div>
-          <div class="price-ticks">
-            <span>0</span>
-            <span>600</span>
-            <span>1200</span>
-            <span>1800</span>
-            <span>2400</span>
-          </div>
-        </div>
-      </aside>
+  <div class="price-filter-container">
+    <div class="price-filter-header">
+      <div class="price-title">
+        <span class="arrow" aria-hidden="true"></span>
+        <span>Margem de Preços</span>
+      </div>
+      <button type="button" class="clear-btn" id="clearBtn">Clear</button>
+    </div>
+
+    <div class="price-inputs">
+      <div class="input-box">
+        <span class="currency">R$</span>
+        <input type="number" id="minInput" value="0" min="0" max="2400" aria-label="Preço mínimo" />
+      </div>
+      <span class="separator">-</span>
+      <div class="input-box">
+        <span class="currency">R$</span>
+        <input type="number" id="maxInput" value="2400" min="0" max="2400" aria-label="Preço máximo" />
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-track"></div>
+      <input type="range" id="minRange" min="0" max="2400" value="0" step="100" aria-label="Controle de preço mínimo" />
+      <input type="range" id="maxRange" min="0" max="2400" value="2400" step="100" aria-label="Controle de preço máximo" />
+    </div>
+
+    <div class="price-ticks" aria-hidden="true">
+      <span>0</span>
+      <span>600</span>
+      <span>1200</span>
+      <span>1800</span>
+      <span>2400</span>
+    </div>
+  </div>
+</aside>
 
       <div class="event-card-container">
 
@@ -224,10 +227,10 @@
 
       </div>
     </div>
+  </section>
 
       <div id="footer-placeholder"></div>
     <script src="/js/footer.js?v=2"></script>
-  </section>
 
 </body>
 </html>
